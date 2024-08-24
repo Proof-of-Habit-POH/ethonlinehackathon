@@ -25,7 +25,7 @@ contract HabitTest is Test {
         uint16 totalDays = 30;
         habit.createNewPledge{value: 1 ether}(totalDays);
 
-        (address pledgeOwner, uint endDate, uint betAmount, , uint16 pledgeTotalDays, uint16 successDays, bool isRedeemed) = habit.pledgeList(0);
+        (address pledgeOwner, , uint betAmount, , uint16 pledgeTotalDays, uint16 successDays, bool isRedeemed) = habit.pledgeList(0);
         
         assertEq(pledgeOwner, owner);
         assertEq(betAmount, 1 ether);
@@ -95,5 +95,32 @@ contract HabitTest is Test {
         assertEq(owner.balance, 0.5 ether);
         assertEq(sponsor.balance, 0.5 ether);
         assertEq(deployer.balance, 0.5 ether);
+    }
+
+    function testRedeemPledgeWithNoSuccess() public {
+          // Set up the deployer address
+        deployer = address(0x4);
+        vm.prank(deployer);
+        habit = new HabitContract();
+        
+        vm.prank(owner);
+        vm.deal(owner, 1 ether);
+        habit.createNewPledge{value: 1 ether}(30);
+
+        vm.prank(sponsor);
+        vm.deal(sponsor, 0.5 ether);
+        habit.sponsorPledge{value: 0.5 ether}(0);
+
+        vm.warp(block.timestamp + 31 days);
+
+        vm.prank(owner);
+        habit.redeemPledge(0, 0);
+
+        (, , , , , , bool isRedeemed) = habit.pledgeList(0);
+        
+        assertEq(isRedeemed, true);
+        assertEq(owner.balance, 0 ether);
+        assertEq(sponsor.balance, 0.5 ether);
+        assertEq(deployer.balance, 1 ether);
     }
 }

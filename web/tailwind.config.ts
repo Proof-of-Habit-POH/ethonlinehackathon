@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { createTheme } from "@mui/material/styles";
 
 const config: Config = {
   content: [
@@ -17,6 +18,8 @@ const config: Config = {
         blacktext: "#1D1D1D",
         graytext: "#8D8D8D",
         grayicon: "#CCCCCC",
+      },
+      backgroundImage: {
       },
     },
   },

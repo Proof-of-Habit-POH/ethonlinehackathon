@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id String @id @default(uuid())
+  walletAddress String  @unique
+  username      String @db.VarChar(10)
+  habits        Habit[] // Relation to Habit
+}
+
+model Habit {
+  id                 Int              @id @default(autoincrement())
+  name               String           @db.VarChar(50)
+  details            String?          @db.VarChar(256)
+  startDate          DateTime
+  duration           Int
+  endDate            DateTime         @default(dbgenerated("(startDate + INTERVAL duration DAY)"))
+  provingMethod      ProvingMethod
+  status             HabitStatus      @default(IN_PROGRESS)
+  amountPunishment   Decimal          @db.Decimal(10,2)
+  sponsorAmount      Decimal?         @db.Decimal(10,2)
+  moneyTransferStatus MoneyTransferStatus @default(PENDING)
+  totalMoney         Decimal          @db.Decimal(10,2)
+  transferBackStatus TransferBackStatus @default(NOT_TRANSFERRED)
+  currentStreak      Int              @default(0) // Current streak for this habit
+  maxStreak          Int              @default(0) // Maximum streak for this habit
+  userId             String
+  user               User             @relation(fields: [userId], references: [id])
+  transactions       HabitTransaction[] // Relation to HabitTransaction
+  sponsorships       Sponsorship[]    // Relation to Sponsorship
+
+  @@index([userId])
+}
+
+
+model HabitTransaction {
+  id          Int      @id @default(autoincrement())
+  date        DateTime @default(now())
+  isCompleted Boolean  @default(false) // Default to "in-progress"
+  imageURL    String?
+  habitId     Int
+  habit       Habit     @relation(fields: [habitId], references: [id])
+
+  @@index([habitId])
+}
+
+model Sponsorship {
+  id           Int      @id @default(autoincrement())
+  habitId      Int
+  walletAddress String
+  amount       Decimal  @db.Decimal(10,2)
+  createDate   DateTime @default(now())
+  habit        Habit    @relation(fields: [habitId], references: [id])
+
+  @@index([habitId])
+}
+// Enums for various statuses
+
+enum ProvingMethod {
+  UPLOAD_IMAGE
+  SELF_CONFIRM
+}
+
+enum HabitStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  ENDED
+}
+
+enum MoneyTransferStatus {
+  PENDING
+  COMPLETED
+}
+
+enum TransferBackStatus {
+  NOT_TRANSFERRED
+  TRANSFERRED_BACK
+}

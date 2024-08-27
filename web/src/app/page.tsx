@@ -5,9 +5,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import HabitSummaryCard from "@/components/home/habit-summary-card";
 import StatSummaryCard from "@/components/home/stats-summary-card";
-import * as actions from "@/actions";
 import { Habit } from "@prisma/client";
-import { redirect } from "next/navigation";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import { useEffect, useState } from "react";
 import Header from "@/components/home/header";
@@ -47,9 +45,7 @@ function a11yProps(index: number) {
 export default function Home() {
   const { address, isConnected } = useWeb3ModalAccount();
   const [habitArray, setHabitArray] = useState<HabitWithHabitTransaction[]>([]);
-  const [sponsoringHabitArray, setSponsoringHabitArray] = useState<
-    HabitWithHabitTransaction[]
-  >([]);
+
   const [userData, setUserData] = useState<UserWithUserData[]>([]);
   const [value, setValue] = useState(0);
 
@@ -87,26 +83,12 @@ export default function Home() {
     }
   };
 
-  const getSponsoringHabitArray = async () => {
-    const res = await fetch(`/api/db/sponsorship?walletAddress=${address}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const result = await res.json();
-    if (result.length > 0) {
-      setSponsoringHabitArray(result);
-    }
-  };
-
   useEffect(() => {
     if (address) {
       // Save wallet address to cookie
       document.cookie = `walletAddress=${address}; path=/; max-age=3600; SameSite=Strict`;
       getUserData();
       getHabitArray();
-      getSponsoringHabitArray();
     }
   }, [address]);
 
@@ -130,19 +112,12 @@ export default function Home() {
         })}
     </div>
   );
-  const sponsoringHabits = (
-    <div className="w-full">
-      {sponsoringHabitArray.map((habit, index: number) => {
-        return <HabitSummaryCard key={index} habit={habit} />;
-      })}
-    </div>
-  );
 
   return (
     <main className="flex w-full min-h-screen border flex-col">
       <Header userData={userData} />
       <div className="flex w-full p-4 flex-col gap-4 items-center justify-start">
-        <div className="w-full bg-primary opacity-50 rounded-lg">
+        <div className="w-full bg-gradient-to-b from-[#F55951] to-[#EED2CB] rounded-lg">
           <StatSummaryCard habitArray={habitArray} />
         </div>
 
@@ -155,7 +130,6 @@ export default function Home() {
             >
               <Tab label="Active Habits" {...a11yProps(0)} />
               <Tab label="Past Habits" {...a11yProps(1)} />
-              <Tab label="Sponsoring Habits" {...a11yProps(2)} />
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
@@ -163,9 +137,6 @@ export default function Home() {
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             <div className="w-full">{endedHabits}</div>
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
-            <div className="w-full">{sponsoringHabits}</div>
           </CustomTabPanel>
         </Box>
       </div>

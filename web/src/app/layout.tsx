@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className} style={{ background: "white" }}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -31,12 +31,15 @@ export default function RootLayout({
                 maxWidth: "390px", // iPhone 14 Pro width
                 height: "844px", // iPhone 14 Pro height
                 margin: "0 auto",
-                overflow: "auto",
                 boxShadow: "0 0 10px rgba(0,0,0,0.1)",
                 position: "relative",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <AppKit>{children}</AppKit>
+              <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+                <AppKit>{children}</AppKit>
+              </Box>
               <BottomNav />
             </Box>
           </ThemeProvider>

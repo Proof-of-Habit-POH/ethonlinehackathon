@@ -1,6 +1,11 @@
 import Link from "next/link";
 import ProgressBar from "@/components/commons/progress-bar";
 import ChipBar from "@/components/commons/chip";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
+import PaidIcon from "@mui/icons-material/Paid";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+
 import {
   daysLeftFromNow,
   calculateMaxStreak,
@@ -48,15 +53,22 @@ export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
 
   // Call habit transactions of this habit
   return (
-    <div className="w-full p-2 my-2 bg-lightgray rounded-lg shadow-md">
-      <Link href={`/habit/${habit.id}`}>
+    <Link href={`/habit/${habit.id}`}>
+      <div className="w-full p-4 my-2 flex flex-col gap-2 bg-gradient-to-r from-[#EED2CB] to-[#F1E8E6] rounded-lg shadow-md">
+        <div className="text-lg">{habit.name}</div>
         <div className="flex flex-col gap-2">
-          <div>{habit.name}</div>
-          <div> {maxStreak} days streak</div>
-          <div>
+          <div className="flex text-sm items-center gap-1">
+            <WhatshotIcon fontSize="small" />
+            {maxStreak} days streak
+          </div>
+          <div className="flex text-sm items-center gap-1">
+            <PaidIcon fontSize="small" />
             {amountSaved}/{habit.amountPunishment} USD saved
           </div>
-          <div> {timeLeft} days left </div>
+          <div className="flex text-sm items-center gap-1">
+            <AccessTimeFilledIcon fontSize="small" />
+            {timeLeft} days left
+          </div>
         </div>
         <div className="flex justify-between items-center">
           <div className="w-1/3">
@@ -66,7 +78,7 @@ export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
             <ProgressBar value={progress} />
           </div>
         </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 }

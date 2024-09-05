@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/db";
-import { Habit, HabitTransaction } from "@prisma/client";
+import { Habit, HabitTransaction, Sponsorship } from "@prisma/client";
 
 interface HabitDetails extends Omit<Habit, "amountPunishment"> {
   amountPunishment: number;

@@ -34,7 +34,7 @@ export default function Login() {
         setLoginStage("register");
       } else {
         setLoginStage("loggedIn");
-        document.cookie = `walletAddress=${address}; path=/; max-age=3600; SameSite=Strict`;
+        // document.cookie = `walletAddress=${address}; path=/; max-age=3600; SameSite=Strict`;
       }
     } else {
       console.log("not logged in");
@@ -58,6 +58,7 @@ export default function Login() {
     document.cookie =
       "wallet=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict";
     setUserData(null);
+    setLoginStage("notLoggedIn");
   };
   useEffect(() => {
     checkUserExists();

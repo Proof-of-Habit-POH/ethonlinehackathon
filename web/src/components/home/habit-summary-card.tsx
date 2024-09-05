@@ -22,7 +22,8 @@ type VerifyResultStatus = "pending" | "true" | "false";
 
 export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
   console.log("inside stat component", habit);
-  const timeLeft = daysLeftFromNow(habit.endDate);
+  const timeLeft =
+    daysLeftFromNow(habit.endDate) > 0 ? daysLeftFromNow(habit.endDate) : 0;
   console.log("habit transaction", habit.transactions);
   // Parse dates
   const startDate = new Date(habit.startDate);
@@ -72,7 +73,12 @@ export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
         </div>
         <div className="flex justify-between items-center">
           <div className="w-1/3">
-            <ChipBar label={todayVerifyResult} color={chipColor} />
+            {habit.status === "ENDED" ||
+            habit.endDate < new Date().toISOString() ? (
+              <ChipBar label="Completed" color="primary" />
+            ) : (
+              <ChipBar label={todayVerifyResult} color={chipColor} />
+            )}
           </div>
           <div className="w-2/3">
             <ProgressBar value={progress} />

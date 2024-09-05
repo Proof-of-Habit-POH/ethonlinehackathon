@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import  prisma  from "@/db";
+import prisma from "@/db";
 import { ProvingMethod } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
@@ -34,8 +34,8 @@ export async function PATCH(request: NextRequest) {
     const habitId = searchParams.get("habitId");
 
     if (habitId) {
-    const result = await prisma.habit.update({
-      where: { id: +habitId },
+      const result = await prisma.habit.update({
+        where: { id: +habitId },
         data: { status: "ENDED" },
       });
     }
@@ -54,12 +54,18 @@ export async function PATCH(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { habitName, verificationMethod, durationOfHabit, betAmountPerDay, address } = body;
-    
+    const {
+      habitName,
+      verificationMethod,
+      durationOfHabit,
+      betAmountPerDay,
+      address,
+    } = body;
+
     // Get the user's id based on their wallet address
     const user = await prisma.user.findUnique({
       where: { walletAddress: address },
-      select: { id: true }
+      select: { id: true },
     });
 
     if (!user) {
@@ -71,14 +77,14 @@ export async function POST(request: NextRequest) {
 
     const userId = user.id;
 
-    const totalMoney = betAmountPerDay * durationOfHabit
+    const totalMoney = betAmountPerDay * durationOfHabit;
 
     let provingMethodChoice: ProvingMethod;
     if (verificationMethod === "Photo uploading") {
-      provingMethodChoice = ProvingMethod.UPLOAD_IMAGE
+      provingMethodChoice = ProvingMethod.UPLOAD_IMAGE;
     } else {
-      provingMethodChoice = ProvingMethod.SELF_CONFIRM
-    } 
+      provingMethodChoice = ProvingMethod.SELF_CONFIRM;
+    }
 
     const result = await prisma.habit.create({
       data: {
@@ -90,12 +96,9 @@ export async function POST(request: NextRequest) {
         provingMethod: provingMethodChoice,
         startDate: new Date(),
         totalMoney: totalMoney,
-      }
+      },
     });
-    return NextResponse.json(
-      { message: "Habit created: " + result.id },
-      { status: 200 }
-    );
+    return NextResponse.json({ data: result }, { status: 200 });
   } catch (err) {
     return NextResponse.json(
       { error: "Internal server error" },

@@ -7,6 +7,7 @@ interface HabitWithHabitTransaction extends HabitDetails {
   transactions: HabitTransaction[];
   sponsorships: Sponsorship[];
 }
+type VerifyResultStatus = "pending" | "completed" | "failed";
 
 function daysLeftFromNow(isoString: any) {
   const targetDate = new Date(isoString);
@@ -145,7 +146,9 @@ function calculateUserProgress(habitArray: HabitWithHabitTransaction[]) {
   const progress = (totalCompletedDays / totalDuration) * 100;
   return Math.ceil(progress);
 }
-function calculateTodayVerifyResult(transactions: HabitTransaction[]) {
+function calculateTodayVerifyResult(
+  transactions: HabitTransaction[]
+): VerifyResultStatus {
   const today = new Date();
   const todayHabitTransaction = transactions.find((habitTransaction) => {
     const habitTransactionDate = new Date(habitTransaction.date);

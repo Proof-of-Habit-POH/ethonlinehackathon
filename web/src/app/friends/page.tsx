@@ -5,7 +5,11 @@ import Header from "@/components/home/header";
 import HabitSummaryCard from "@/components/home/habit-summary-card";
 import Box from "@mui/material/Box";
 import { Habit, HabitTransaction, Sponsorship, User } from "@prisma/client";
-interface HabitWithHabitTransaction extends Habit {
+
+interface HabitDetails extends Omit<Habit, "amountPunishment"> {
+  amountPunishment: number;
+}
+interface HabitWithHabitTransaction extends HabitDetails {
   transactions: HabitTransaction[];
   sponsorships: Sponsorship[];
 }

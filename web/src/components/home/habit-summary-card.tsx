@@ -4,7 +4,6 @@ import ChipBar from "@/components/commons/chip";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import PaidIcon from "@mui/icons-material/Paid";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 import {
   daysLeftFromNow,
@@ -13,12 +12,21 @@ import {
   calculateProgress,
   calculateTodayVerifyResult,
 } from "@/utils/";
-import { Habit } from "@prisma/client";
+import { Habit, HabitTransaction, Sponsorship } from "@prisma/client";
 
-interface HabitSummaryProps {
-  habit: HabitDetails | Habit;
+interface HabitDetails extends Omit<Habit, "amountPunishment"> {
+  amountPunishment: number;
 }
-type VerifyResultStatus = "pending" | "true" | "false";
+
+interface HabitWithHabitTransaction extends HabitDetails {
+  transactions: HabitTransaction[];
+  sponsorships: Sponsorship[];
+}
+
+type VerifyResultStatus = "pending" | "completed" | "failed";
+interface HabitSummaryProps {
+  habit: HabitWithHabitTransaction;
+}
 
 export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
   console.log("inside stat component", habit);
@@ -41,7 +49,7 @@ export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
   // calculate progress
   const progress = calculateProgress(startDate, habit.duration, endDate);
   // calculate today's verify result
-  const todayVerifyResult = calculateTodayVerifyResult(
+  const todayVerifyResult: VerifyResultStatus = calculateTodayVerifyResult(
     habit.transactions || []
   );
   const chipColor =
@@ -74,7 +82,7 @@ export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
         <div className="flex justify-between items-center">
           <div className="w-1/3">
             {habit.status === "ENDED" ||
-            habit.endDate < new Date().toISOString() ? (
+            new Date(habit.endDate) < new Date() ? (
               <ChipBar label="Completed" color="primary" />
             ) : (
               <ChipBar label={todayVerifyResult} color={chipColor} />

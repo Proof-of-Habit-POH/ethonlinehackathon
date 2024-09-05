@@ -11,11 +11,17 @@ import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import { useEffect, useState } from "react";
 import Header from "@/components/home/header";
 import { redirect } from "next/navigation";
-import { User } from "@prisma/client";
+import { User, HabitTransaction, Sponsorship } from "@prisma/client";
 
 interface HabitDetails extends Omit<Habit, "amountPunishment"> {
   amountPunishment: number;
 }
+
+interface HabitWithHabitTransaction extends HabitDetails {
+  transactions: HabitTransaction[];
+  sponsorships: Sponsorship[];
+}
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -47,10 +53,6 @@ function a11yProps(index: number) {
 
 export default function Home() {
   const { address, isConnected } = useWeb3ModalAccount();
-  // check if address exists and redirect if not
-  // if (!address) {
-  //   redirect("/login");
-  // }
   const [habitArray, setHabitArray] = useState<HabitWithHabitTransaction[]>([]);
   const [userData, setUserData] = useState<User | null>(null);
   const [value, setValue] = useState(0);
@@ -109,7 +111,7 @@ export default function Home() {
       {habitArray
         .filter(
           (habit) =>
-            habit.status !== "ENDED" && habit.endDate > new Date().toISOString()
+            habit.status !== "ENDED" && new Date(habit.endDate) > new Date()
         )
         .sort(
           (a, b) =>
@@ -125,7 +127,7 @@ export default function Home() {
       {habitArray
         .filter(
           (habit) =>
-            habit.status === "ENDED" || habit.endDate < new Date().toISOString()
+            habit.status === "ENDED" || new Date(habit.endDate) < new Date()
         )
         .sort(
           (a, b) =>

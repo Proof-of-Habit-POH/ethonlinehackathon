@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import Header from "@/components/home/header";
 import HabitSummaryCard from "@/components/home/habit-summary-card";
 import Box from "@mui/material/Box";
-import { User } from "@prisma/client";
+import { Habit, HabitTransaction, Sponsorship, User } from "@prisma/client";
+interface HabitWithHabitTransaction extends Habit {
+  transactions: HabitTransaction[];
+  sponsorships: Sponsorship[];
+}
 export default function FriendHabit() {
   const { address, isConnected } = useWeb3ModalAccount();
   const [userData, setUserData] = useState<User | null>(null);

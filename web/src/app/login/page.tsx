@@ -6,11 +6,12 @@ import Image from "next/image";
 import Logo from "../../assets/logo-name-vertical.svg";
 import { useEffect, useState } from "react";
 import LoginImage from "../../assets/login-page-img.svg";
+import { User } from "@prisma/client";
 
 export default function Login() {
   const { address, isConnected } = useWeb3ModalAccount();
   const router = useRouter();
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<User | null>(null);
   const [inputUsername, setInputUsername] = useState("");
   const [loginStage, setLoginStage] = useState("notLoggedIn");
   // const [loginStage, setLoginStage] = useState("register");
@@ -34,6 +35,7 @@ export default function Login() {
         setLoginStage("register");
       } else {
         setLoginStage("loggedIn");
+        setUserData(result.user);
         // document.cookie = `walletAddress=${address}; path=/; max-age=3600; SameSite=Strict`;
       }
     } else {
@@ -44,13 +46,15 @@ export default function Login() {
     setInputUsername(e.target.value);
   };
   const handleRegister = async () => {
-    const newUser = await fetch("/api/db/login", {
+    const res = await fetch("/api/db/login", {
       method: "POST",
       body: JSON.stringify({ address, username: inputUsername }),
     });
-    console.log("result from creating new user", newUser);
+    console.log("result from creating new user", res);
+    const result = await res.json();
     document.cookie = `walletAddress=${address}; path=/; max-age=3600; SameSite=Strict`;
     setLoginStage("loggedIn");
+    setUserData(result.user);
     router.push("/");
   };
   const handleLogout = () => {

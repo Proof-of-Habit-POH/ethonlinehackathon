@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
         username: username,
       },
     });
-    return NextResponse.json({ result }, { status: 200 });
+    return NextResponse.json({ user: result }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: "Internal server error" },

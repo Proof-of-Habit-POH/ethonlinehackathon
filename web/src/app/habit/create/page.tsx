@@ -33,6 +33,8 @@ import { CloseFullscreen } from "@mui/icons-material";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Backdrop, CircularProgress } from "@mui/material";
+import Image from "next/image";
+import habitCreateComplete from "@/assets/habit-create-complete.png";
 
 export default function CreateNewHabit() {
   const router = useRouter();
@@ -281,7 +283,9 @@ export default function CreateNewHabit() {
                 open={loading}
               >
                 <CircularProgress color="inherit" />
-                <p className="m-3 text-md my-4">Waiting on-chain transaction...</p>
+                <p className="m-3 text-md my-4">
+                  Waiting on-chain transaction...
+                </p>
               </Backdrop>
             ) : (
               <div>
@@ -337,13 +341,19 @@ export default function CreateNewHabit() {
         )}
 
         {page === 3 && (
-          <div>
+          <div className="flex flex-col gap-4 items-center">
             <h1 className="text-4xl font-bold my-4">Congratulations!</h1>
             <p className="text-md my-4">
               Now you can ask your love ones to sponsor your pledge. If you can
               complete every single day, you will get their sponsored gift. If
               not, the money will return to them.
             </p>
+            <Image
+              src={habitCreateComplete}
+              alt="sponsor"
+              width={300}
+              height={300}
+            />
 
             <BasicButton
               text={

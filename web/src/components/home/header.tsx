@@ -6,7 +6,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
-export default function Header({ userData }: { userData: User }) {
+export default function Header({ userData }: { userData: User | null }) {
   console.log("user data inside header", userData);
   const router = useRouter();
   return (
@@ -15,7 +15,7 @@ export default function Header({ userData }: { userData: User }) {
         <Image src={Logo} alt="Logo" width={50} height={50} />
       </div>
       <div className="flex flex-col justify-between flex-grow">
-        <div className="text-lg">Hey {userData.username}</div>
+        <div className="text-lg">Hey {userData?.username}</div>
         <div className="text-sm">Lets get better version of yourself</div>
       </div>
       <div onClick={() => router.push("/habit/create")}>

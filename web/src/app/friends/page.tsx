@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import Header from "@/components/home/header";
 import HabitSummaryCard from "@/components/home/habit-summary-card";
 import Box from "@mui/material/Box";
-
+import { User } from "@prisma/client";
 export default function FriendHabit() {
   const { address, isConnected } = useWeb3ModalAccount();
-  const [userData, setUserData] = useState<UserWithUserData[]>([]);
+  const [userData, setUserData] = useState<User | null>(null);
   const [sponsoringHabitArray, setSponsoringHabitArray] = useState<
     HabitWithHabitTransaction[]
   >([]);

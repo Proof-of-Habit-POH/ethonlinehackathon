@@ -11,6 +11,7 @@ import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import { useEffect, useState } from "react";
 import Header from "@/components/home/header";
 import { redirect } from "next/navigation";
+import { User } from "@prisma/client";
 
 interface HabitDetails extends Omit<Habit, "amountPunishment"> {
   amountPunishment: number;
@@ -51,7 +52,7 @@ export default function Home() {
   //   redirect("/login");
   // }
   const [habitArray, setHabitArray] = useState<HabitWithHabitTransaction[]>([]);
-  const [userData, setUserData] = useState<UserWithUserData[]>([]);
+  const [userData, setUserData] = useState<User | null>(null);
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
 

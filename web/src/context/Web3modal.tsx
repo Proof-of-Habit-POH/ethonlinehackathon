@@ -1,9 +1,8 @@
-
 // context/Web3Modal.tsx
 
-'use client'
+"use client";
 
-import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react'
+import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
 import { getCsrfToken, signIn, signOut, getSession } from "next-auth/react";
 import type {
   SIWEVerifyMessageArgs,
@@ -11,58 +10,57 @@ import type {
   SIWESession,
 } from "@web3modal/siwe";
 import { createSIWEConfig, formatMessage } from "@web3modal/siwe";
-import { verifySignature } from '@web3modal/siwe'
+import { verifySignature } from "@web3modal/siwe";
 
 interface SIWEConfig {
   // Required
-  getNonce: () => Promise<string>
-  createMessage: (args: SIWECreateMessageArgs) => string
-  verifyMessage: (args: SIWEVerifyMessageArgs) => Promise<boolean>
-  getSession: () => Promise<SIWESession | null>
-  signOut: () => Promise<boolean>
+  getNonce: () => Promise<string>;
+  createMessage: (args: SIWECreateMessageArgs) => string;
+  verifyMessage: (args: SIWEVerifyMessageArgs) => Promise<boolean>;
+  getSession: () => Promise<SIWESession | null>;
+  signOut: () => Promise<boolean>;
 
   // Optional
-  onSignIn?: (session?: SIWESession) => void
-  onSignOut?: () => void
+  onSignIn?: (session?: SIWESession) => void;
+  onSignOut?: () => void;
   // Defaults to true
-  enabled?: boolean
+  enabled?: boolean;
   // In milliseconds, defaults to 5 minutes
-  nonceRefetchIntervalMs?: number
+  nonceRefetchIntervalMs?: number;
   // In milliseconds, defaults to 5 minutes
-  sessionRefetchIntervalMs?: number
+  sessionRefetchIntervalMs?: number;
   // Defaults to true
-  signOutOnDisconnect?: boolean
+  signOutOnDisconnect?: boolean;
   // Defaults to true
-  signOutOnAccountChange?: boolean
+  signOutOnAccountChange?: boolean;
   // Defaults to true
-  signOutOnNetworkChange?: boolean
+  signOutOnNetworkChange?: boolean;
 }
 
-
 // 1. Your WalletConnect Cloud project ID
-export const projectId = 'e9d008ea001059749e0784bf0a0b032b'
+export const projectId = "e9d008ea001059749e0784bf0a0b032b";
 
 // 2. Set chains
 const testnet = {
   chainId: 2810,
-  name: 'Morph Holesky Testnet',
-  currency: 'ETH',
-  explorerUrl: 'https://explorer-holesky.morphl2.io',
-  rpcUrl: 'https://rpc-quicknode-holesky.morphl2.io'
+  name: "Morph Holesky Testnet",
+  currency: "ETH",
+  explorerUrl: "https://explorer-holesky.morphl2.io",
+  rpcUrl: "https://rpc-quicknode-holesky.morphl2.io",
   // chainId: 421614,
   // name: 'Arbitrum Sepolia',
   // currency: 'ETH',
   // explorerUrl: 'https://sepolia.arbiscan.io',
   // rpcUrl: 'https://sepolia-rollup.arbitrum.io/rpc'
-}
+};
 
 // 3. Create a metadata object
 const metadata = {
-  name: 'proof of habit',
-  description: 'AppKit Example',
-  url: 'localhost:3000', // origin must match your domain & subdomain
-  icons: ['https://avatars.githubusercontent.com/u/37784886']
-}
+  name: "proof of habit",
+  description: "AppKit Example",
+  url: "localhost:3000", // origin must match your domain & subdomain
+  icons: ["https://avatars.githubusercontent.com/u/37784886"],
+};
 
 // 4. Create Ethers config
 const ethersConfig = defaultConfig({
@@ -73,10 +71,9 @@ const ethersConfig = defaultConfig({
   enableEIP6963: true, // true by default
   enableInjected: true, // true by default
   enableCoinbase: true, // true by default
-  rpcUrl: '...', // used for the Coinbase SDK
+  rpcUrl: "...", // used for the Coinbase SDK
   defaultChainId: 1, // used for the Coinbase SDK
-})
-
+});
 
 // Sign In With Ethereum
 const siweConfig = createSIWEConfig({
@@ -133,9 +130,6 @@ const siweConfig = createSIWEConfig({
   },
 });
 
-
-
-
 // 5. Create a Web3Modal instance
 createWeb3Modal({
   ethersConfig,
@@ -145,11 +139,11 @@ createWeb3Modal({
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
   enableOnramp: true, // Optional - false as default
   themeVariables: {
-    '--w3m-color-mix': '#371D32',
-    '--w3m-color-mix-strength': 40
-  }
-})
+    "--w3m-color-mix": "#371D32",
+    "--w3m-color-mix-strength": 40,
+  },
+});
 
-export function AppKit({ children }) {
-    return children
-  }
+export function AppKit({ children }: { children: React.ReactNode }) {
+  return children;
+}

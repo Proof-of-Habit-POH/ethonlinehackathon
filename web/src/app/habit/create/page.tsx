@@ -71,28 +71,28 @@ export default function CreateNewHabit() {
 
     try {
       console.log("creating new pledge...");
-      // const ethersProvider = new BrowserProvider(walletProvider);
-      // const signer = await ethersProvider.getSigner();
+      const ethersProvider = new BrowserProvider(walletProvider);
+      const signer = await ethersProvider.getSigner();
 
-      // // The Contract object
-      // const HabitContract = new Contract(
-      //   habitContractAddress,
-      //   habitContractABI,
-      //   signer
-      // );
-      // const HabitContractCreateNewPledge = await HabitContract.createNewPledge(
-      //   durationOfHabit,
-      //   { value: ethers.parseEther(totalAmount.toString()) }
-      // );
+      // The Contract object
+      const HabitContract = new Contract(
+        habitContractAddress,
+        habitContractABI,
+        signer
+      );
+      const HabitContractCreateNewPledge = await HabitContract.createNewPledge(
+        durationOfHabit,
+        { value: ethers.parseEther(totalAmount.toString()) }
+      );
 
-      // console.log("Created success!");
+      console.log("Created success!");
 
-      // const receiptTx = await HabitContractCreateNewPledge.wait();
-      // console.log("ReceiptTx:", receiptTx);
-      // const pledgeId = receiptTx.logs[0].args.id;
-      // const pledgeIdNumber = parseInt(pledgeId, 16);
-      // setNewPledgeId(pledgeIdNumber);
-      // console.log("PledgeId:", pledgeIdNumber);
+      const receiptTx = await HabitContractCreateNewPledge.wait();
+      console.log("ReceiptTx:", receiptTx);
+      const pledgeId = receiptTx.logs[0].args.id;
+      const pledgeIdNumber = parseInt(pledgeId, 16);
+      setNewPledgeId(pledgeIdNumber);
+      console.log("PledgeId:", pledgeIdNumber);
 
       //create new habitId in database
       const res = await fetch(`/api/db/habit`, {

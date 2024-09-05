@@ -32,6 +32,7 @@ import { getEthPrice } from "@/actions";
 import { CloseFullscreen } from "@mui/icons-material";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 export default function CreateNewHabit() {
   const router = useRouter();
@@ -46,6 +47,7 @@ export default function CreateNewHabit() {
   const [newPledgeId, setNewPledgeId] = useState<number>(0);
   const [createdHabitId, setCreatedHabitId] = useState<number>(0);
   const [buttonClicked, setButtonClicked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // smart contract interaction
   const { address, chainId, isConnected } = useWeb3ModalAccount();
@@ -86,6 +88,7 @@ export default function CreateNewHabit() {
       );
 
       console.log("Created success!");
+      setLoading(true);
 
       const receiptTx = await HabitContractCreateNewPledge.wait();
       console.log("ReceiptTx:", receiptTx);
@@ -116,7 +119,7 @@ export default function CreateNewHabit() {
       } else {
         console.error("Error creating habit:", res.status);
       }
-
+      setLoading(false);
       setPage(page + 1);
     } catch (error) {
       console.error(error);
@@ -181,53 +184,7 @@ export default function CreateNewHabit() {
                   <div className="text-lg font-bold">&#8594;</div>
                 </button>
               ))}
-
-              {/* <FormControl>
-                <FormLabel id="demo-controlled-radio-buttons-group">
-                  Verification Method
-                </FormLabel>
-                <RadioGroup
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={verificationMethod}
-                  onChange={(event) =>
-                    setVerificationMethod(event.target.value)
-                  }
-                  color="primary"
-                >
-                  {verificationMethods.map((method) => (
-                    <FormControlLabel
-                      key={method.name}
-                      value={method.name}
-                      control={<Radio />}
-                      label={method.name}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-
-              {verificationMethod === "Let Friend Approve" && (
-                <TextField
-                  label="Your Friend Wallet Address"
-                  value={friendWalletAddress}
-                  onChange={(event) =>
-                    setFriendWalletAddress(event.target.value)
-                  }
-                  placeholder="0x..."
-                />
-              )} */}
             </div>
-
-            {/* <div className="flex justify-end my-8">
-              <BasicButton
-                text="Next"
-                onClick={() => {
-                  clickNextPage();
-                  getETHPrice();
-                }}
-                color="secondary"
-              />
-            </div> */}
           </div>
         )}
 
@@ -315,45 +272,67 @@ export default function CreateNewHabit() {
         {/* third page, confirm pledge */}
         {page === 2 && (
           <div>
-            <h1 className="text-xl font-bold my-4">Hey Loser 😛</h1>
-            <p className="text-md my-4">
-              You have pledged to do{" "}
-              <span className="font-bold text-primary capitalize">
-                {habitName}
-              </span>{" "}
-              for{" "}
-              <span className="font-bold text-primary">{durationOfHabit}</span>{" "}
-              days.
-            </p>
-            <p className="text-md my-4">
-              If you fail the verification by{" "}
-              <span className="font-bold text-primary lowercase">
-                {verificationMethod}
-              </span>
-              , you will lose{" "}
-              <span className="font-bold text-primary">{betAmountPerDay}</span>{" "}
-              USD to the charity for each day I fail. And the rest of the money
-              will return to your wallet.
-            </p>
-            <p className="text-md my-4">
-              If you complete the habit every single day, you will get all the
-              money + sponsored money from your love ones.
-            </p>
-            <p className="text-md my-4">
-              Are you sure that you are ready to stop being such a loser and
-              pledge by submitting your USDT on habit smart contract?
-            </p>
+            {loading ? (
+              <Backdrop
+                sx={{
+                  color: "#fff",
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={loading}
+              >
+                <CircularProgress color="inherit" />
+                <p className="m-3 text-md my-4">Waiting on-chain transaction...</p>
+              </Backdrop>
+            ) : (
+              <div>
+                <h1 className="text-xl font-bold my-4">Hey Loser 😛</h1>
+                <p className="text-md my-4">
+                  You have pledged to do{" "}
+                  <span className="font-bold text-primary capitalize">
+                    {habitName}
+                  </span>{" "}
+                  for{" "}
+                  <span className="font-bold text-primary">
+                    {durationOfHabit}
+                  </span>{" "}
+                  days.
+                </p>
+                <p className="text-md my-4">
+                  If you fail the verification by{" "}
+                  <span className="font-bold text-primary lowercase">
+                    {verificationMethod}
+                  </span>
+                  , you will lose{" "}
+                  <span className="font-bold text-primary">
+                    {betAmountPerDay}
+                  </span>{" "}
+                  USD to the charity for each day I fail. And the rest of the
+                  money will return to your wallet.
+                </p>
+                <p className="text-md my-4">
+                  If you complete the habit every single day, you will get all
+                  the money + sponsored money from your love ones.
+                </p>
+                <p className="text-md my-4">
+                  Are you sure that you are ready to stop being such a loser and
+                  pledge by submitting your USDT on habit smart contract?
+                </p>
 
-            <div className="flex justify-between my-8">
-              <IconButton onClick={clickPreviousPage} aria-label="I'm a loser">
-                <ArrowBackIcon />
-              </IconButton>
-              <BasicButton
-                text="Shut Up and Take My Money"
-                onClick={createNewPledge}
-                color="secondary"
-              />
-            </div>
+                <div className="flex justify-between my-8">
+                  <IconButton
+                    onClick={clickPreviousPage}
+                    aria-label="I'm a loser"
+                  >
+                    <ArrowBackIcon />
+                  </IconButton>
+                  <BasicButton
+                    text="Shut Up and Take My Money"
+                    onClick={createNewPledge}
+                    color="secondary"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         )}
 

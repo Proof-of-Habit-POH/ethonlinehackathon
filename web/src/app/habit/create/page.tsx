@@ -1,7 +1,7 @@
 "use client";
 
 import BasicButton from "@/components/commons/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -30,8 +30,11 @@ import {
 import { BrowserProvider, Contract, ethers } from "ethers";
 import { getEthPrice } from "@/actions";
 import { CloseFullscreen } from "@mui/icons-material";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function CreateNewHabit() {
+  const router = useRouter();
   // Add variables to setup state
   const [page, setPage] = useState<number>(0);
   const [verificationMethod, setVerificationMethod] = useState<string>("");
@@ -41,6 +44,8 @@ export default function CreateNewHabit() {
   const [friendWalletAddress, setFriendWalletAddress] = useState<string>("");
   const [ETHPrice, setETHPrice] = useState<number>(2588);
   const [newPledgeId, setNewPledgeId] = useState<number>(0);
+  const [createdHabitId, setCreatedHabitId] = useState<number>(0);
+  const [buttonClicked, setButtonClicked] = useState(false);
 
   // smart contract interaction
   const { address, chainId, isConnected } = useWeb3ModalAccount();
@@ -104,7 +109,10 @@ export default function CreateNewHabit() {
         }),
       });
       if (res.ok) {
-        console.log("habit created: ", res.json());
+        // get habitId from response
+        const createdHabit = await res.json();
+        console.log("Habit created: ", createdHabit);
+        setCreatedHabitId(createdHabit.data.id);
       } else {
         console.error("Error creating habit:", res.status);
       }
@@ -132,9 +140,25 @@ export default function CreateNewHabit() {
     getETHPrice();
   };
   const shareMyPledgeButton = () => {
-    // TODO: redirect to dashboard
-    console.log("goToDashboard");
+    const url = `${window.location.origin}/habit/${createdHabitId}`;
+    console.log("URL to be copied: ", url);
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        setButtonClicked(() => true);
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+    router.push(`/habit/${createdHabitId}`);
   };
+  // check first if user is logged in
+  useEffect(() => {
+    console.log("address: inside create habit useeffect", address);
+    if (!address) {
+      redirect("/login");
+    }
+  }, [address]);
 
   return (
     <>
@@ -341,9 +365,15 @@ export default function CreateNewHabit() {
               complete every single day, you will get their sponsored gift. If
               not, the money will return to them.
             </p>
+
             <BasicButton
-              text="Share My Pledge"
-              onClick={shareMyPledgeButton}
+              text={
+                buttonClicked ? "Copied link to clipboard" : "Share My Pledge"
+              }
+              onClick={() => {
+                shareMyPledgeButton();
+                setButtonClicked(true);
+              }}
               color="secondary"
             />
           </div>

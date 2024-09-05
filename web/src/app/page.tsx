@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { Backdrop, CircularProgress } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
@@ -9,6 +10,7 @@ import { Habit } from "@prisma/client";
 import { useWeb3ModalAccount } from "@web3modal/ethers/react";
 import { useEffect, useState } from "react";
 import Header from "@/components/home/header";
+import { redirect } from "next/navigation";
 
 interface HabitDetails extends Omit<Habit, "amountPunishment"> {
   amountPunishment: number;
@@ -44,10 +46,14 @@ function a11yProps(index: number) {
 
 export default function Home() {
   const { address, isConnected } = useWeb3ModalAccount();
+  // check if address exists and redirect if not
+  // if (!address) {
+  //   redirect("/login");
+  // }
   const [habitArray, setHabitArray] = useState<HabitWithHabitTransaction[]>([]);
-
   const [userData, setUserData] = useState<UserWithUserData[]>([]);
   const [value, setValue] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -86,9 +92,12 @@ export default function Home() {
   useEffect(() => {
     if (address) {
       // Save wallet address to cookie
-      document.cookie = `walletAddress=${address}; path=/; max-age=3600; SameSite=Strict`;
-      getUserData();
-      getHabitArray();
+      // document.cookie = `walletAddress=${address}; path=/; max-age=3600; SameSite=Strict`;
+      Promise.all([getUserData(), getHabitArray()]).then(() => {
+        setLoading(false);
+      });
+    } else {
+      redirect("/login");
     }
   }, [address]);
 
@@ -97,7 +106,14 @@ export default function Home() {
   const ongoingHabits = (
     <div className="w-full">
       {habitArray
-        .filter((habit) => habit.status !== "ENDED")
+        .filter(
+          (habit) =>
+            habit.status !== "ENDED" && habit.endDate > new Date().toISOString()
+        )
+        .sort(
+          (a, b) =>
+            new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
+        )
         .map((habit, index) => {
           return <HabitSummaryCard key={index} habit={habit} />;
         })}
@@ -106,7 +122,14 @@ export default function Home() {
   const endedHabits = (
     <div className="w-full">
       {habitArray
-        .filter((habit) => habit.status === "ENDED")
+        .filter(
+          (habit) =>
+            habit.status === "ENDED" || habit.endDate < new Date().toISOString()
+        )
+        .sort(
+          (a, b) =>
+            new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
+        )
         .map((habit, index) => {
           return <HabitSummaryCard key={index} habit={habit} />;
         })}
@@ -115,31 +138,42 @@ export default function Home() {
 
   return (
     <main className="flex w-full min-h-screen border flex-col">
-      <Header userData={userData} />
-      <div className="flex w-full p-4 flex-col gap-4 items-center justify-start">
-        <div className="w-full bg-gradient-to-b from-[#F55951] to-[#EED2CB] rounded-lg">
-          <StatSummaryCard habitArray={habitArray} />
-        </div>
+      {loading ? (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      ) : (
+        <>
+          <Header userData={userData} />
+          <div className="flex w-full p-4 flex-col gap-4 items-center justify-start">
+            <div className="w-full bg-gradient-to-b from-[#F55951] to-[#EED2CB] rounded-lg">
+              <StatSummaryCard habitArray={habitArray} />
+            </div>
 
-        <Box sx={{ width: "100%" }}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-            >
-              <Tab label="Active Habits" {...a11yProps(0)} />
-              <Tab label="Past Habits" {...a11yProps(1)} />
-            </Tabs>
-          </Box>
-          <CustomTabPanel value={value} index={0}>
-            <div className="w-full">{ongoingHabits}</div>
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
-            <div className="w-full">{endedHabits}</div>
-          </CustomTabPanel>
-        </Box>
-      </div>
+            <Box sx={{ width: "100%" }}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  aria-label="basic tabs example"
+                >
+                  <Tab label="Active Habits" {...a11yProps(0)} />
+                  <Tab label="Past Habits" {...a11yProps(1)} />
+                </Tabs>
+              </Box>
+              <CustomTabPanel value={value} index={0}>
+                <div className="w-full">{ongoingHabits}</div>
+              </CustomTabPanel>
+              <CustomTabPanel value={value} index={1}>
+                <div className="w-full">{endedHabits}</div>
+              </CustomTabPanel>
+            </Box>
+          </div>
+        </>
+      )}
     </main>
   );
 }

@@ -1,13 +1,16 @@
 import Button from "@mui/material/Button";
+import { ButtonProps } from "@mui/material";
+
 interface ButtonProperty {
   text?: string;
-  variant?: string;
+  variant?: ButtonProps["variant"];
   onClick?: () => void;
-  color?: string;
-  size?: string;
+  color?: ButtonProps["color"];
+  size?: ButtonProps["size"];
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
 }
+
 export default function BasicButton({
   text = "click",
   variant = "contained",

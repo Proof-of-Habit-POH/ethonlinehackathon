@@ -1,10 +1,11 @@
 "use client";
 import * as React from "react";
 import Chip from "@mui/material/Chip";
+import { ChipProps } from "@mui/material";
 import Stack from "@mui/material/Stack";
 interface ChipProperties {
   label?: string;
-  color?: string;
+  color?: ChipProps["color"];
   size?: string;
   variant?: "outlined" | "filled";
   onClick?: () => void;

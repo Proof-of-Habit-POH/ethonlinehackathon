@@ -28,9 +28,9 @@ export default function RootLayout({
             <CssBaseline />
             <Box
               sx={{
-                maxWidth: "390px", // iPhone 14 Pro width
-                height: "844px", // iPhone 14 Pro height
-                margin: "0 auto",
+                maxWidth: "350px", // iPhone 14 width
+                height: "656px", // iPhone 14 height
+                margin: "5vh auto 0 auto",
                 boxShadow: "0 0 10px rgba(0,0,0,0.1)",
                 position: "relative",
                 display: "flex",

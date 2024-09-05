@@ -140,7 +140,7 @@ export default function Home() {
   );
 
   return (
-    <main className="flex w-full min-h-screen border flex-col">
+    <main className="flex w-full min-h-[600px] border flex-col">
       {loading ? (
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}

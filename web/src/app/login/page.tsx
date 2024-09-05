@@ -113,7 +113,7 @@ export default function Login() {
   );
 
   return (
-    <main className="flex h-screen flex-col items-center justify-center gap-8 p-8">
+    <main className="flex h-[788px] flex-col items-center justify-center gap-8 p-8">
       <div>
         <Image src={Logo} alt="Logo" width={100} height={100} />
       </div>

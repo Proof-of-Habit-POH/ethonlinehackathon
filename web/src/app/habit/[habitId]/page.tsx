@@ -70,7 +70,8 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
   const [isRedeem, setIsRedeem] = useState(false);
   const [sponsorAmount, setSponsorAmount] = useState<number>(0);
   const [ETHPrice, setETHPrice] = useState<number>(2588);
-  const [habitOwnerUserWalletAddress, setHabitOwnerUserWalletAddress] = useState<string>("");
+  const [habitOwnerUserWalletAddress, setHabitOwnerUserWalletAddress] =
+    useState<string>("");
   const [provingMethod, setProvingMethod] = useState<string>("");
   const [username, setUsername] = useState<string>("");
 
@@ -134,17 +135,16 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
           if (res.ok) {
             const data = await res.json();
             console.log("user details: ", data);
-    
+
             // set owner of user wallet address
             setHabitOwnerUserWalletAddress(data.user.walletAddress);
             setUsername(data.user.username);
+          } else {
+            console.error("Error can't find userId");
+          }
         }
-        else {
-        console.error("Error can't find userId");
       }
     };
-    };
-  };
 
     const fetchHabitTransaction = async () => {
       const res = await fetch(
@@ -206,7 +206,6 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
         setVerifyResult(todayHabitTransaction.isCompleted ? "true" : "false");
       }
     }
-    
   }, [habitTransactions]);
 
   // change tab
@@ -246,7 +245,6 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
     });
     console.log("Create habit transaction in database", habitTransaction);
   };
-
 
   const getETHPriceAPI = async () => {
     try {
@@ -375,268 +373,277 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-8 p-8 bg-lightgraybg">
-      
-        {loading ? (
-          <Backdrop
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={loading}
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
-        ) : (
-          <>
-        <div className="w-full bg-gradient-to-b from-[#F55951] to-[#EED2CB] rounded-lg text-center">
-          <h2 className="text-black text-2xl m-2  font-bold">
-            {`"${habitDetails?.name}"`}
-          </h2>
-          <p className="text-black m-2 text-md">by {username}</p>
-        </div>
+    <main className="flex min-h-[600px] flex-col items-center gap-8 p-8 bg-lightgraybg">
+      {loading ? (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      ) : (
+        <>
+          <div className="w-full bg-gradient-to-b from-[#F55951] to-[#EED2CB] rounded-lg text-center">
+            <h2 className="text-black text-2xl m-2  font-bold">
+              {`"${habitDetails?.name}"`}
+            </h2>
+            <p className="text-black m-2 text-md">by {username}</p>
+          </div>
 
-        <TabContext value={tab}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList
-              onChange={handleTabChange}
-              aria-label="lab API tabs example"
-              textColor="secondary"
-              indicatorColor="secondary"
-            >
-              <Tab label="Overview" value="overview" />
-              {habitOwnerUserWalletAddress == address && (
-                <Tab label="Verify" value="verify" />
-              )}
-              <Tab label="Sponsor" value="sponsor" />
-            </TabList>
-          </Box>
-          <TabPanel value="overview">
-            <div className="flex justify-center items-center">
-              <Box width="90%" p={2} sx={{ border: "2px solid grey" }}>
-                <h2 className="text-l font-bold uppercase text-center my-4">
-                  Declaration of my pledge
-                </h2>
-                <p className="text-md my-4">
-                  I am committed to do{" "}
-                  <span className="font-bold text-primary capitalize">
-                    {habitDetails?.name}
-                  </span>{" "}
-                  for{" "}
-                  <span className="font-bold text-primary">
-                    {habitDetails?.duration}
-                  </span>{" "}
-                  days.
-                </p>
-                <p className="text-md my-4">
-                  If I fail the verification by{" "}
-                  <span className="font-bold text-primary lowercase">
-                    {habitDetails?.provingMethod}
-                  </span>
-                  , I will donate{" "}
-                  <span className="font-bold text-primary">
-                    {habitDetails?.amountPunishment}
-                  </span>{" "}
-                  USD to the charity for each day I fail.
-                </p>
-              </Box>
-            </div>
-
-            <Divider className="py-4">Status</Divider>
-
-            {verifyResult == "true" && (
-              <div>
-                <Alert severity="success">Today: ✅ Completed</Alert>
-                <p>How many days left: {daysLeft}</p>
-                <p>Start Date: {startDate.toDateString()}</p>
-                <p>End Date: {endDate.toDateString()}</p>
-                <div>Your Bet: {betAmount} USD</div>
+          <TabContext value={tab}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                onChange={handleTabChange}
+                aria-label="lab API tabs example"
+                textColor="secondary"
+                indicatorColor="secondary"
+              >
+                <Tab label="Overview" value="overview" />
+                {habitOwnerUserWalletAddress == address && (
+                  <Tab label="Verify" value="verify" />
+                )}
+                <Tab label="Sponsor" value="sponsor" />
+              </TabList>
+            </Box>
+            <TabPanel value="overview">
+              <div className="flex justify-center items-center">
+                <Box width="100%" p={2} sx={{ border: "2px solid grey" }}>
+                  <h2 className="text-l font-bold uppercase text-center my-4">
+                    Declaration of my pledge
+                  </h2>
+                  <p className="text-md my-4">
+                    I am committed to do{" "}
+                    <span className="font-bold text-primary capitalize">
+                      {habitDetails?.name}
+                    </span>{" "}
+                    for{" "}
+                    <span className="font-bold text-primary">
+                      {habitDetails?.duration}
+                    </span>{" "}
+                    days.
+                  </p>
+                  <p className="text-md my-4">
+                    If I fail the verification by{" "}
+                    <span className="font-bold text-primary lowercase">
+                      {habitDetails?.provingMethod}
+                    </span>
+                    , I will donate{" "}
+                    <span className="font-bold text-primary">
+                      {habitDetails?.amountPunishment}
+                    </span>{" "}
+                    USD to the charity for each day I fail.
+                  </p>
+                </Box>
               </div>
-            )}
 
-            {verifyResult == "false" && (
-              <div>
-                <p>How many days left: {daysLeft}</p>
-                <p>Start Date: {startDate.toDateString()}</p>
-                <p>End Date: {endDate.toDateString()}</p>
-                <Alert severity="error">Today Status: ❌ You are a LOSER</Alert>
-              </div>
-            )}
+              <Divider className="py-4 font-bold">Status</Divider>
 
-            {verifyResult == "pending" && (
-              <div>
-                <p>How many days left: {daysLeft}</p>
-                <p>Start Date: {startDate.toDateString()}</p>
-                <p>End Date: {endDate.toDateString()}</p>
-                <Alert severity="info">Today Status: ⏳ Pending</Alert>
-                <p>
-                  (You are going to lose {habitDetails?.amountPunishment} USD)
-                </p>
-                <div className="my-2">
-                  <BasicButton
-                    color="secondary"
-                    text="Prove"
-                    onClick={() => setTab("verify")}
-                  />
+              {verifyResult == "true" && (
+                <div className="flex flex-col ">
+                  <Alert severity="success">Today: ✅ Completed</Alert>
+                  <p>How many days left: {daysLeft}</p>
+                  <p>Start Date: {startDate.toDateString()}</p>
+                  <p>End Date: {endDate.toDateString()}</p>
+                  <div>Your Bet: {betAmount} USD</div>
                 </div>
-              </div>
-            )}
+              )}
 
-            <Divider className="py-4">History</Divider>
+              {verifyResult == "false" && (
+                <div className="flex flex-col">
+                  <p>How many days left: {daysLeft}</p>
+                  <p>Start Date: {startDate.toDateString()}</p>
+                  <p>End Date: {endDate.toDateString()}</p>
+                  <Alert severity="error">
+                    Today Status: ❌ You are a LOSER
+                  </Alert>
+                </div>
+              )}
 
-            {listHabitTransactions?.length === 0 && (
-              <div>You have not done anything</div>
-            )}
-
-            {listHabitTransactions?.map((habitTransaction: any) => (
-              <div key={habitTransaction.id}>
-                {habitTransaction.date} | {habitTransaction.isCompleted}
-              </div>
-            ))}
-          </TabPanel>
-
-          <TabPanel value="verify">
-            <div>
-              {verifyResult === "pending" && !isPledgeEnd && provingMethod === "UPLOAD_IMAGE" && (
-                <div>
-                  <p>Click here to upload evidence</p>
-                  <AppModal header="Upload Evidence">
-                    <ImageUpload
-                      verifyResult={verifyResult}
-                      setVerifyResult={setVerifyResult}
-                      habitId={habitId}
-                      habitName={habitDetails?.name ?? ""}
+              {verifyResult == "pending" && (
+                <div className="flex flex-col">
+                  <p>How many days left: {daysLeft}</p>
+                  <p>Start Date: {startDate.toDateString()}</p>
+                  <p>End Date: {endDate.toDateString()}</p>
+                  <Alert severity="info">Today Status: ⏳ Pending</Alert>
+                  <p>
+                    (You are going to lose {habitDetails?.amountPunishment} USD)
+                  </p>
+                  <div className="flex justify-center my-4">
+                    <BasicButton
+                      color="secondary"
+                      text="Prove"
+                      onClick={() => setTab("verify")}
                     />
-                  </AppModal>
+                  </div>
                 </div>
               )}
 
-              {verifyResult === "pending" && !isPledgeEnd && provingMethod === "SELF_CONFIRM" && (
-                <div>
-                  <p className="text-md my-4">Did you do the habit?</p>
-                  <BasicButton
-                    color="secondary"
-                    text="Yes"
-                    onClick={selfVerifyYes}
-                  />
-                  <span className="mx-4">or</span>
-                  <BasicButton
-                    color="secondary"
-                    text="No"
-                    onClick={selfVerifyNo}
-                  />
-                </div>
+              <Divider className="py-4 font-bold">History</Divider>
+
+              {listHabitTransactions?.length === 0 && (
+                <div>You have not done anything</div>
               )}
 
+              {listHabitTransactions?.map((habitTransaction: any) => (
+                <div key={habitTransaction.id}>
+                  {habitTransaction.date} | {habitTransaction.isCompleted}
+                </div>
+              ))}
+            </TabPanel>
 
+            <TabPanel value="verify">
+              <div>
+                {verifyResult === "pending" &&
+                  !isPledgeEnd &&
+                  provingMethod === "UPLOAD_IMAGE" && (
+                    <div className="flex flex-col items-center justify-center">
+                      <h2 className="text-2xl font-bold">Upload Evidence</h2>
+                      <p className="text-md my-2">
+                        Click Verify button to upload evidence
+                      </p>
+                      <AppModal header="Upload Evidence">
+                        <ImageUpload
+                          verifyResult={verifyResult}
+                          setVerifyResult={setVerifyResult}
+                          habitId={habitId}
+                          habitName={habitDetails?.name ?? ""}
+                        />
+                      </AppModal>
+                    </div>
+                  )}
 
-              {(verifyResult === "true" || verifyResult === "false") &&
-                !isPledgeEnd && (
+                {verifyResult === "pending" &&
+                  !isPledgeEnd &&
+                  provingMethod === "SELF_CONFIRM" && (
+                    <div>
+                      <p className="text-md my-4">Did you do the habit?</p>
+                      <BasicButton
+                        color="secondary"
+                        text="Yes"
+                        onClick={selfVerifyYes}
+                      />
+                      <span className="mx-4">or</span>
+                      <BasicButton
+                        color="secondary"
+                        text="No"
+                        onClick={selfVerifyNo}
+                      />
+                    </div>
+                  )}
+
+                {(verifyResult === "true" || verifyResult === "false") &&
+                  !isPledgeEnd && (
+                    <div>
+                      <Alert
+                        icon={<CheckIcon fontSize="inherit" />}
+                        severity="success"
+                      >
+                        You already did the verification today
+                      </Alert>
+                    </div>
+                  )}
+
+                {isPledgeEnd && !isRedeem && (
                   <div>
-                    <Alert
-                      icon={<CheckIcon fontSize="inherit" />}
-                      severity="success"
+                    <p>Redeem your money</p>
+
+                    {/* button to redeem money on smart contract */}
+                    <BasicButton
+                      color="secondary"
+                      text="Get My Money Back"
+                      onClick={redeemPledge}
+                    />
+
+                    <Dialog
+                      open={openAlert}
+                      onClose={handleCloseAlert}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
                     >
-                      You already did the verification today
-                    </Alert>
+                      <DialogTitle id="alert-dialog-title">
+                        {"Congratualtions!"}
+                      </DialogTitle>
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                          You got {returnAmount} USD on your wallet.
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleCloseAlert}>Close</Button>
+                      </DialogActions>
+                    </Dialog>
                   </div>
                 )}
 
-              {isPledgeEnd && !isRedeem && (
-                <div>
-                  <p>Redeem your money</p>
-
-                  {/* button to redeem money on smart contract */}
-                  <BasicButton
-                    color="secondary"
-                    text="Get My Money Back"
-                    onClick={redeemPledge}
-                  />
-
-                  <Dialog
-                    open={openAlert}
-                    onClose={handleCloseAlert}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
+                {isRedeem && (
+                  <Alert
+                    icon={<CheckIcon fontSize="inherit" />}
+                    severity="success"
                   >
-                    <DialogTitle id="alert-dialog-title">
-                      {"Congratualtions!"}
-                    </DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                        You got {returnAmount} USD on your wallet.
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={handleCloseAlert}>Close</Button>
-                    </DialogActions>
-                  </Dialog>
+                    You already redeemed your money
+                  </Alert>
+                )}
+              </div>
+
+              {habitOwnerUserWalletAddress !== address && (
+                <div>
+                  <p className="text-md my-2">
+                    seriously, this is not your business. Let the owner do
+                    verification!
+                  </p>
                 </div>
               )}
+            </TabPanel>
 
-              {isRedeem && (
-                <Alert
-                  icon={<CheckIcon fontSize="inherit" />}
-                  severity="success"
+            <TabPanel value="sponsor">
+              <div className="flex flex-col items-center justify-center">
+                <h2 className="text-2xl font-bold">Sponsor your friend</h2>
+                <p className="text-md my-2">
+                  Help them to stay motivated and do the habit
+                </p>
+
+                {/* form to sponsor your friend */}
+                <div className="my-4">
+                  <TextField
+                    id="outlined-number"
+                    label="Sponsor Amount in USD"
+                    type="number"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    value={sponsorAmount}
+                    onChange={(e) => setSponsorAmount(parseInt(e.target.value))}
+                  />
+                </div>
+
+                {/* button to sponsor on smart contract */}
+                <div className="my-4">
+                  <BasicButton
+                    color="secondary"
+                    text="Sponsor"
+                    onClick={sponsorPledge}
+                  />
+                </div>
+
+                <Dialog
+                  open={openAlert}
+                  onClose={handleCloseAlert}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
                 >
-                  You already redeemed your money
-                </Alert>
-              )}
-            </div>
-
-            {habitOwnerUserWalletAddress !== address && (
-              <div>
-                <p className="text-md my-2">seriously, this is not your business. Let the owner do verification!</p>
+                  <DialogTitle id="alert-dialog-title">{"Done!"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      You sponsored {sponsorAmount} USD to their pledge.
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseAlert}>Close</Button>
+                  </DialogActions>
+                </Dialog>
               </div>
-            )}
-          </TabPanel>
-
-          <TabPanel value="sponsor">
-            <div className="flex flex-col items-center justify-center">
-              <h2 className="text-2xl font-bold">Sponsor your friend</h2>
-              <p className="text-md my-2">
-                Help them to stay motivated and do the habit
-              </p>
-
-              {/* form to sponsor your friend */}
-              <div className="my-4">
-                <TextField
-                  id="outlined-number"
-                  label="Sponsor Amount in USD"
-                  type="number"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={sponsorAmount}
-                  onChange={(e) => setSponsorAmount(parseInt(e.target.value))}
-                />
-              </div>
-
-              {/* button to sponsor on smart contract */}
-              <div className="my-4">
-                <BasicButton
-                  color="secondary"
-                  text="Sponsor"
-                  onClick={sponsorPledge}
-                />
-              </div>
-
-              <Dialog
-                open={openAlert}
-                onClose={handleCloseAlert}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">{"Done!"}</DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    You sponsored {sponsorAmount} USD to their pledge.
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleCloseAlert}>Close</Button>
-                </DialogActions>
-              </Dialog>
-            </div>
-          </TabPanel>
-        </TabContext>
+            </TabPanel>
+          </TabContext>
         </>
       )}
     </main>

@@ -62,7 +62,7 @@ export default function FriendHabit() {
     </div>
   );
   return (
-    <main className="flex w-full min-h-screen border flex-col">
+    <main className="flex w-full min-h-[600px] border flex-col">
       <Header userData={userData} />
       <div className="flex w-full p-4 flex-col gap-4 items-center justify-start">
         <div className="flex w-full flex-col gap-2 items-center justify-start">

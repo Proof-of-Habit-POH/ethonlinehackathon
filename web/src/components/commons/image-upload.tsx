@@ -64,10 +64,12 @@ export default function ImageUpload({
     }
   };
   return (
-    <div>
-      <input type="file" onChange={handleImageChange} />
+    <div className="flex flex-col gap-4 items-center justify-center">
+      <div className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+        <input type="file" onChange={handleImageChange} />
+      </div>
       <div className="text-primary">{error}</div>
-      <BasicButton text="Submit" onClick={handleSubmit} />
+      <BasicButton text="Submit" color="secondary" onClick={handleSubmit} />
     </div>
   );
 }

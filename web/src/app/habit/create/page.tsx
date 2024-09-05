@@ -167,7 +167,7 @@ export default function CreateNewHabit() {
 
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center p-8">
+      <main className="flex min-h-[600px] flex-col items-center p-8">
         {/* first page, choose verification method */}
         {page === 0 && (
           <div>
@@ -368,7 +368,6 @@ export default function CreateNewHabit() {
           </div>
         )}
       </main>
-      ;
     </>
   );
 }

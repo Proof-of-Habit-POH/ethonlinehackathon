@@ -30,7 +30,7 @@ export default function AppModal({
 
   return (
     <div>
-      <BasicButton text="Verify" onClick={handleOpen} />
+      <BasicButton text="Verify" color="secondary" onClick={handleOpen} />
       <Modal
         open={open}
         onClose={handleClose}

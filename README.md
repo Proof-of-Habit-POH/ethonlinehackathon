@@ -43,15 +43,6 @@ Proof of Habit is an innovative blockchain-based application designed to help in
 - **Database**: Prisma
 - **Verification AI**: ChatGPT-4o
 
-
-### Future Developments:
-
-- Integration with health and fitness tracking devices for automated progress monitoring
-- Expansion to support group challenges and corporate wellness programs
-
-Proof of Habit represents a novel approach to personal development, leveraging cutting-edge technology to empower individuals to take control of their habits and, by extension, their lives. Join us in revolutionizing the way people approach self-improvement and habit formation!
-
-
 ## How It Works
 
 <p align="center" width="100%">
@@ -87,3 +78,11 @@ The project is split into 2 packages:
 ### Deployed Contract Address
 Morphl Holeskey Testnet
 [0x4c8C8913369af8D4736563c3E20bb12a6ec1d904](https://explorer-holesky.morphl2.io/address/0x4c8C8913369af8D4736563c3E20bb12a6ec1d904)
+
+
+### Future Developments:
+
+- Integration with health and fitness tracking devices for automated progress monitoring
+- Expansion to support group challenges and corporate wellness programs
+
+Proof of Habit represents a novel approach to personal development, leveraging cutting-edge technology to empower individuals to take control of their habits and, by extension, their lives. Join us in revolutionizing the way people approach self-improvement and habit formation!

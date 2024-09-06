@@ -1,66 +1,30 @@
-## Foundry
+# Proof of Habit Contract
+The smart contracts are written in Solidity and tested using Foundry. 
+The contracts are deployed on Morph Holesky Testnet.
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+### Run Test
 
-Foundry consists of:
-
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
-
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
+```bash
+forge test
 ```
 
 ### Deploy
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+1. create .env file with your MORPH_HOLESKY_RPC_URL and PRIVATE_KEY
+
+```
+MORPH_HOLESKY_RPC_URL=<your_rpc_url>
+PRIVATE_KEY=<your_private_key>
 ```
 
-### Cast
+2. deploy the contract
 
-```shell
-$ cast <subcommand>
+```bash
+source .env
+forge create --rpc-url $MORPH_HOLESKY_RPC_URL --private-key $PRIVATE_KEY --legacy src/Habit.sol:HabitContract
 ```
 
-### Help
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+### Deployed Contract Address
+Morphl Holeskey Testnet
+[0x4c8C8913369af8D4736563c3E20bb12a6ec1d904](https://explorer-holesky.morphl2.io/address/0x4c8C8913369af8D4736563c3E20bb12a6ec1d904)

@@ -81,6 +81,26 @@ function calculateUserMaxStreak(habitArray: HabitWithHabitTransaction[]) {
   return overallMaxStreak;
 }
 
+function calculateTotalBet(
+  amountPunishment: number,
+  duration: number,
+  sponsorships: Sponsorship[]
+) {
+  if (!amountPunishment && !duration && !sponsorships) return 0;
+
+  // Calculate the base bet amount
+  const baseBet = Number(amountPunishment) * duration;
+
+  // Calculate the total sponsorship amount
+  const totalSponsorship = sponsorships.reduce((sum, sponsorship) => {
+    return sum + Number(sponsorship.amount);
+  }, 0);
+
+  // Sum up the base bet and total sponsorship
+  const totalBet = baseBet + totalSponsorship;
+
+  return Number(totalBet.toFixed(2));
+}
 function calculateMoneySaved(
   transactions: HabitTransaction[],
   amountPunishment: number,
@@ -171,4 +191,5 @@ export {
   calculateUserMaxStreak,
   calculateUserMoneySaved,
   calculateUserProgress,
+  calculateTotalBet,
 };

@@ -11,6 +11,7 @@ import {
   calculateMoneySaved,
   calculateProgress,
   calculateTodayVerifyResult,
+  calculateTotalBet,
 } from "@/utils/";
 import { Habit, HabitTransaction, Sponsorship } from "@prisma/client";
 
@@ -46,6 +47,12 @@ export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
     habit.duration,
     habit.sponsorships || []
   );
+  const totalBet = calculateTotalBet(
+    habit.amountPunishment,
+    habit.duration,
+    habit.sponsorships || []
+  );
+
   // calculate progress
   const progress = calculateProgress(startDate, habit.duration, endDate);
   // calculate today's verify result
@@ -72,7 +79,7 @@ export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
           </div>
           <div className="flex text-sm items-center gap-1">
             <PaidIcon fontSize="small" />
-            {amountSaved}/{habit.amountPunishment} USD saved
+            {amountSaved}/{totalBet} USD saved
           </div>
           <div className="flex text-sm items-center gap-1">
             <AccessTimeFilledIcon fontSize="small" />

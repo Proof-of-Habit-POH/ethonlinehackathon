@@ -28,6 +28,10 @@ export async function GET(request: NextRequest) {
       where: {
         id: { in: habitIdArr },
       },
+      include: {
+        transactions: true,
+        sponsorships: true,
+      },
     });
     return NextResponse.json(habitArr, { status: 200 });
   } catch (err) {

@@ -23,16 +23,14 @@ function daysLeftFromNow(isoString: any) {
 }
 
 function calculateMaxStreak(transactions: HabitTransaction[]): number {
+  if (!transactions || transactions.length === 0) return 0;
   let maxStreak = 1;
   let currentStreak = 1;
-  if (!transactions || transactions.length === 0) return 0;
 
   // Sort transactions by date just in case they are not in order
-  transactions.sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  );
-
-  if (transactions.length === 0) return 0;
+  transactions
+    .filter((transaction) => transaction.isCompleted)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   // Loop through transactions and check for consecutive days
   let prevDate = new Date(transactions[0].date);

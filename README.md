@@ -15,10 +15,6 @@ Our use of AI for verification adds a layer of accountability while maintaining 
     <img width="100%" src="problem.jpg"> 
 </p>
 
-## Introduction
-
-Proof of Habit is an innovative blockchain-based application designed to help individuals build and maintain positive habits through a unique incentive system. Our application leverages the power of smart contracts, social accountability, and artificial intelligence to create a robust habit-forming ecosystem.
-
 ### Key Features:
 
 <p align="center" width="100%">
@@ -31,7 +27,7 @@ Proof of Habit is an innovative blockchain-based application designed to help in
 
 3. **Social Sponsorship**: Friends and supporters can sponsor a user's habit journey, adding additional rewards and encouragement.
 
-4. **AI-Powered Verification**: Daily progress is verified using ChatGPT-4o, which analyzes photo evidence submitted by users to confirm habit completion.
+4. **AI-Powered Verification**: Daily progress is verified using ChatGPT-4o, which analyzes photo evidence submitted by users to confirm habit completion. This enables a scalable and cost-effective verification process.
 
 ### Technology Stack:
 
@@ -68,6 +64,10 @@ Proof of Habit is an innovative blockchain-based application designed to help in
 
 By combining financial incentives, social support, and AI verification, Proof of Habit creates a powerful ecosystem for personal growth and habit formation.
 
+# Challenges
+
+**API Through Oracle**: At the end of the pledge, we need to send a number of successful days to the smart contract. Right now, we have no way to verify that users havn't cheated by calling smart contract function directly without our verification. We need some kind of oracle to verify the data for us.
+
 
 ## Project Structure
 The project is split into 2 packages:
@@ -77,12 +77,12 @@ The project is split into 2 packages:
 
 ### Deployed Contract Address
 Morphl Holeskey Testnet
-[0x4c8C8913369af8D4736563c3E20bb12a6ec1d904](https://explorer-holesky.morphl2.io/address/0x4c8C8913369af8D4736563c3E20bb12a6ec1d904)
+[0xCbdE51Ba4307742DF70afF96186801cA61f73b20](https://explorer-holesky.morphl2.io/address/0xCbdE51Ba4307742DF70afF96186801cA61f73b20)
 
 
 ### Future Developments:
 
-- Integration with health and fitness tracking devices for automated progress monitoring
-- Expansion to support group challenges and corporate wellness programs
+- Integration with health and fitness tracking devices for automated progress monitoring.
+- Expansion to support group challenges. To make it more fun and social!
 
 Proof of Habit represents a novel approach to personal development, leveraging cutting-edge technology to empower individuals to take control of their habits and, by extension, their lives. Join us in revolutionizing the way people approach self-improvement and habit formation!

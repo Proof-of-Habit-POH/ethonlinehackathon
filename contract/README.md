@@ -27,4 +27,4 @@ forge create --rpc-url $MORPH_HOLESKY_RPC_URL --private-key $PRIVATE_KEY --legac
 
 ### Deployed Contract Address
 Morphl Holeskey Testnet
-[0x4c8C8913369af8D4736563c3E20bb12a6ec1d904](https://explorer-holesky.morphl2.io/address/0x4c8C8913369af8D4736563c3E20bb12a6ec1d904)
+[0xCbdE51Ba4307742DF70afF96186801cA61f73b20](https://explorer-holesky.morphl2.io/address/0xCbdE51Ba4307742DF70afF96186801cA61f73b20)

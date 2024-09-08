@@ -42,6 +42,8 @@ export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
   const maxStreak = calculateMaxStreak(habit.transactions || []);
 
   const amountSaved = calculateMoneySaved(
+    habit.moneyTransferStatus,
+    habit.totalMoney.toString(),
     habit.transactions || [],
     habit.amountPunishment,
     habit.duration,
@@ -79,15 +81,15 @@ export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
           </div>
           <div className="flex text-sm items-center gap-1">
             <PaidIcon fontSize="small" />
-            {amountSaved}/{totalBet} USD saved
+            {String(amountSaved)} out of {String(totalBet)} USD saved
           </div>
           <div className="flex text-sm items-center gap-1">
             <AccessTimeFilledIcon fontSize="small" />
             {timeLeft} days left
           </div>
         </div>
-        <div className="flex justify-between items-center">
-          <div className="w-1/3">
+        <div className="flex justify-between items-center gap-2 ">
+          <div className="w-2/5">
             {habit.status === "ENDED" ||
             new Date(habit.endDate) < new Date() ? (
               <ChipBar label="Completed" color="primary" />
@@ -95,7 +97,7 @@ export default function HabitSummaryCard({ habit }: HabitSummaryProps) {
               <ChipBar label={todayVerifyResult} color={chipColor} />
             )}
           </div>
-          <div className="w-2/3">
+          <div className="w-3/5">
             <ProgressBar value={progress} />
           </div>
         </div>

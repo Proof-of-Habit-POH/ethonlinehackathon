@@ -1,4 +1,9 @@
-import { Habit, Sponsorship, HabitTransaction } from "@prisma/client";
+import {
+  Habit,
+  Sponsorship,
+  HabitTransaction,
+  MoneyTransferStatus,
+} from "@prisma/client";
 
 interface HabitDetails extends Omit<Habit, "amountPunishment"> {
   amountPunishment: number;
@@ -100,16 +105,21 @@ function calculateTotalBet(
   return Number(totalBet.toFixed(2));
 }
 function calculateMoneySaved(
+  moneyTransferStatus: MoneyTransferStatus,
+  totalMoney: string,
   transactions: HabitTransaction[],
   amountPunishment: number,
   duration: number,
   sponsorships: Sponsorship[]
 ): number {
   // calculate money saved from daily habit completed
+  if (moneyTransferStatus === "COMPLETED") {
+    return Number(totalMoney);
+  }
   let amount =
-    (transactions.filter((transaction) => transaction.isCompleted).length *
-      amountPunishment) /
-    duration;
+    transactions.filter((transaction) => transaction.isCompleted).length *
+    amountPunishment;
+
   // calculate money saved in case the habit already "ended"
   const maxStreak = calculateMaxStreak(transactions);
   if (maxStreak === duration) {
@@ -126,6 +136,8 @@ function calculateUserMoneySaved(habitArray: HabitWithHabitTransaction[]) {
 
   for (const habit of habitArray) {
     const habitMoneySaved = calculateMoneySaved(
+      habit.moneyTransferStatus,
+      habit.totalMoney.toString(),
       habit.transactions,
       habit.amountPunishment,
       habit.duration,

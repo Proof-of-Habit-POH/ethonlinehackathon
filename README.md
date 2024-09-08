@@ -61,6 +61,7 @@ Our use of AI for verification adds a layer of accountability while maintaining 
 5. **Consequences**:
    - Success: Reclaim your stake plus any sponsor rewards
    - Failure: Your stake is donated to charity
+   - Partial Success: Get some portion of your stake back
 
 By combining financial incentives, social support, and AI verification, Proof of Habit creates a powerful ecosystem for personal growth and habit formation.
 

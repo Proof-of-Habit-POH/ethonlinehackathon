@@ -14,8 +14,6 @@ export default function Login() {
   const [userData, setUserData] = useState<User | null>(null);
   const [inputUsername, setInputUsername] = useState("");
   const [loginStage, setLoginStage] = useState("notLoggedIn");
-  // const [loginStage, setLoginStage] = useState("register");
-  // const [loginStage, setLoginStage] = useState("loggedIn");
 
   const checkUserExists = async () => {
     if (address) {
@@ -57,13 +55,7 @@ export default function Login() {
     setUserData(result.user);
     router.push("/");
   };
-  const handleLogout = () => {
-    // disconnect wallet
-    document.cookie =
-      "wallet=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict";
-    setUserData(null);
-    setLoginStage("notLoggedIn");
-  };
+
   useEffect(() => {
     checkUserExists();
   }, [address]);
@@ -107,7 +99,6 @@ export default function Login() {
           color="secondary"
           onClick={() => router.push("/")}
         />
-        <BasicButton text="Logout" onClick={handleLogout} />
       </div>
     </div>
   );
@@ -118,7 +109,6 @@ export default function Login() {
         <Image src={Logo} alt="Logo" width={100} height={100} />
       </div>
 
-      {/* {isConnected && userData ? loggedIn : notLoggedIn} */}
       {loginStage === "notLoggedIn"
         ? notLoggedIn
         : loginStage === "register"

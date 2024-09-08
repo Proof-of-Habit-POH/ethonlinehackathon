@@ -23,7 +23,7 @@ contract HabitTest is Test {
         vm.prank(owner);
         vm.deal(owner, 1 ether);
         uint16 totalDays = 30;
-        habit.createNewPledge{value: 1 ether}(totalDays);
+        habit.createNewPledge{value: 1 ether}(totalDays, 0);
 
         (address pledgeOwner, , uint betAmount, , uint16 pledgeTotalDays, uint16 successDays, bool isRedeemed) = habit.pledgeList(0);
         
@@ -37,7 +37,7 @@ contract HabitTest is Test {
     function testSponsorPledge() public {
         vm.prank(owner);
         vm.deal(owner, 1 ether);
-        habit.createNewPledge{value: 1 ether}(30);
+        habit.createNewPledge{value: 1 ether}(30, 0);
 
         vm.prank(sponsor);
         vm.deal(sponsor, 0.5 ether);
@@ -52,7 +52,7 @@ contract HabitTest is Test {
     function testRedeemPledgeFullSuccess() public {
         vm.prank(owner);
         vm.deal(owner, 1 ether);
-        habit.createNewPledge{value: 1 ether}(30);
+        habit.createNewPledge{value: 1 ether}(30, 0);
 
         vm.prank(sponsor);
         vm.deal(sponsor, 0.5 ether);
@@ -78,7 +78,7 @@ contract HabitTest is Test {
         
         vm.prank(owner);
         vm.deal(owner, 1 ether);
-        habit.createNewPledge{value: 1 ether}(30);
+        habit.createNewPledge{value: 1 ether}(30, 0);
 
         vm.prank(sponsor);
         vm.deal(sponsor, 0.5 ether);
@@ -105,7 +105,7 @@ contract HabitTest is Test {
         
         vm.prank(owner);
         vm.deal(owner, 1 ether);
-        habit.createNewPledge{value: 1 ether}(30);
+        habit.createNewPledge{value: 1 ether}(30, 0);
 
         vm.prank(sponsor);
         vm.deal(sponsor, 0.5 ether);

@@ -112,8 +112,13 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
         setEndDate(endDate);
 
         // is pledge end or not
-        if (today > endDate) {
+        if (today >= endDate) {
           setIsPledgeEnd(true);
+        }
+
+        if (data.moneyTransferStatus === "COMPLETED") {
+          setIsRedeem(true);
+          setReturnAmount(data.totalMoney);
         }
 
         // set bet amount
@@ -260,13 +265,14 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
   const { address, chainId, isConnected } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
   // adjust habitId - 1
-  const habitIdOnChain = habitId - 1;
+  // const habitIdOnChain = habitId - 1;
+  const habitIdOnChain = habitId
 
   // smart contract to redeem pledge
   async function redeemPledge() {
     if (!isConnected) throw Error("User disconnected");
     if (!walletProvider) throw Error("Wallet provider not found");
-    getETHPriceAPI();
+    await getETHPriceAPI();
 
     try {
       // count success days
@@ -276,6 +282,7 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
           successDays++;
         }
       }
+      console.log("successDays: ", successDays);
 
       console.log("Redeeming pledge...");
       const ethersProvider = new BrowserProvider(walletProvider);
@@ -287,25 +294,39 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
         habitContractABI,
         signer
       );
+
+      console.log("habitIdOnChain: ", habitIdOnChain);
+
       const HabitContractRedeemPledge = await HabitContract.redeemPledge(
         habitIdOnChain,
         successDays
       );
 
+      setLoading(true);
+
       const receiptTx = await HabitContractRedeemPledge.wait();
       console.log("Redeem success! ReceiptTx:", receiptTx);
 
       const returnAmount = receiptTx.logs[0].args.returnAmount;
-      const returnAmountNumber = parseInt(returnAmount, 16);
-      const returnAmountUSD = Number(
-        (returnAmountNumber * ETHPrice).toFixed(2)
-      );
+      console.log("returnAmount: ", returnAmount);
+        // Convert BigNumber to ether (as a string)
+        const returnAmountEther = ethers.formatEther(returnAmount);
+        console.log("returnAmountEther:", returnAmountEther);
+        
+        // Convert ether string to a number for calculation
+        const returnAmountNumber = parseFloat(returnAmountEther);
+        console.log("returnAmountNumber:", returnAmountNumber);
+        
+        // Calculate USD value
+      const returnAmountUSD = Number((returnAmountNumber * ETHPrice).toFixed(2));
+      console.log("returnAmountUSD:", returnAmountUSD);
+
       setReturnAmount(returnAmountUSD);
       setIsRedeem(true);
       alert("You got money back:" + returnAmountUSD + " USD on your wallet.");
 
       // write to database that the habit status is ended
-      const res = await fetch(`/api/db/habit?habitId=${habitId}`, {
+      const res = await fetch(`/api/db/habit?habitId=${habitId}&returnAmountUSD=${returnAmountUSD}`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -316,6 +337,7 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
       } else {
         console.error("Error updating habit status:", res.status);
       }
+      setLoading(false);
 
       // alert users
       handleOpenAlert();
@@ -468,13 +490,7 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
                   <p>
                     (You are going to lose {habitDetails?.amountPunishment} USD)
                   </p>
-                  <div className="flex justify-center my-4">
-                    <BasicButton
-                      color="secondary"
-                      text="Prove"
-                      onClick={() => setTab("verify")}
-                    />
-                  </div>
+                 
                 </div>
               )}
 
@@ -543,7 +559,7 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
                     </div>
                   )}
 
-                {isPledgeEnd && !isRedeem && (
+                {isPledgeEnd && !isRedeem && verifyResult !== "pending" && (
                   <div>
                     <p>Redeem your money</p>
 
@@ -553,35 +569,19 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
                       text="Get My Money Back"
                       onClick={redeemPledge}
                     />
-
-                    <Dialog
-                      open={openAlert}
-                      onClose={handleCloseAlert}
-                      aria-labelledby="alert-dialog-title"
-                      aria-describedby="alert-dialog-description"
-                    >
-                      <DialogTitle id="alert-dialog-title">
-                        {"Congratualtions!"}
-                      </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                          You got {returnAmount} USD on your wallet.
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handleCloseAlert}>Close</Button>
-                      </DialogActions>
-                    </Dialog>
                   </div>
                 )}
 
                 {isRedeem && (
+                  <>
                   <Alert
                     icon={<CheckIcon fontSize="inherit" />}
                     severity="success"
                   >
-                    You already redeemed your money
+                    Congratulations
                   </Alert>
+                  <p className="text-md my-2">You got money back: {returnAmount} USD in your wallet</p>
+                  </>
                 )}
               </div>
 
@@ -624,23 +624,6 @@ export default function HabitDetails({ params }: HabitDetailsProps) {
                     onClick={sponsorPledge}
                   />
                 </div>
-
-                <Dialog
-                  open={openAlert}
-                  onClose={handleCloseAlert}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">{"Done!"}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      You sponsored {sponsorAmount} USD to their pledge.
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseAlert}>Close</Button>
-                  </DialogActions>
-                </Dialog>
               </div>
             </TabPanel>
           </TabContext>

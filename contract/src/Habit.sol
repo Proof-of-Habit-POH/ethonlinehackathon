@@ -14,7 +14,8 @@ contract HabitContract {
         bool isRedeemed;
     }
 
-    Pledge[] public pledgeList;
+    // mapping pledgeId to pledge
+    mapping(uint => Pledge) public pledgeList;
 
     // Sponsor variables
     struct Sponsor {
@@ -24,10 +25,6 @@ contract HabitContract {
     }
 
     Sponsor[] public sponsorList;
-
-    // mapping total amount of money with pledgeId
-    mapping(uint => uint) public pledgeAmount;
-
 
     // setup initial deployer address
     address public deployerAddress;
@@ -42,7 +39,7 @@ contract HabitContract {
 
 
     // register new contract function
-    function createNewPledge(uint16 totalDays) external payable {
+    function createNewPledge(uint16 totalDays, uint pledgeId) external payable {
         require(totalDays > 0, "Total days must be greater than 0");
         require(msg.value > 0, "Bet amount must be greater than 0");
         
@@ -55,15 +52,14 @@ contract HabitContract {
             successDays: 0, // This will be updated when the redeem the pledge
             isRedeemed: false
         });
-        pledgeList.push(newPledge);
-        pledgeAmount[pledgeList.length - 1] = msg.value;
-        emit PledgeCreated(pledgeList.length - 1);
+        pledgeList[pledgeId] = newPledge;
+        emit PledgeCreated(pledgeId);
     }
 
     function sponsorPledge(uint pledgeId) external payable {
         require(msg.value > 0, "Sponsor amount must be greater than 0");
-        require(pledgeId < pledgeList.length, "Invalid pledge ID");
         require(!pledgeList[pledgeId].isRedeemed, "Pledge has already been redeemed");
+
 
         Sponsor memory newSponsor = Sponsor({
             sponsorAddress: msg.sender,
@@ -71,11 +67,9 @@ contract HabitContract {
             pledgeId: pledgeId
         });
         sponsorList.push(newSponsor);
-        pledgeAmount[pledgeId] += msg.value;
 
-        // add to pledge sponsor amount
-        Pledge storage pledge = pledgeList[pledgeId];
-        pledge.sponsorAmount += msg.value;
+        // update pledge sponsor amount
+        pledgeList[pledgeId].sponsorAmount += msg.value;
 
         // emit event
         emit SponsorCreated(sponsorList.length - 1);
@@ -84,20 +78,22 @@ contract HabitContract {
     function redeemPledge(uint pledgeId, uint16 successDays) external {
         require(pledgeList[pledgeId].ownerAddress == msg.sender, "You are not the owner of this pledge");
         require(pledgeList[pledgeId].isRedeemed == false, "Pledge has already been redeemed");
-        require(pledgeList[pledgeId].endDate < block.timestamp, "Pledge is ongoing");
+        // require(pledgeList[pledgeId].endDate < block.timestamp, "Pledge is ongoing"); // To make everything easier in the demo and hackathon, we will not check the end date
         require(successDays <= pledgeList[pledgeId].totalDays, "Success days must be less than or equal to total days");
+
 
         // mark the pledge as redeemed
         pledgeList[pledgeId].isRedeemed = true;
 
         // if they success every single day, transfer the total amount to the owner + sponsor amount
         if (successDays == pledgeList[pledgeId].totalDays) {
-            (bool success, ) = (msg.sender).call{value: pledgeAmount[pledgeId]}("");
+            uint returnAmount = pledgeList[pledgeId].betAmount + pledgeList[pledgeId].sponsorAmount;
+            (bool success, ) = (msg.sender).call{value: returnAmount}("");
             require(success, "Transfer failed");
 
             // emit event
-            emit PledgeRedeemed(pledgeId, pledgeAmount[pledgeId]);
-            
+            emit PledgeRedeemed(pledgeId, returnAmount);
+            pledgeList[pledgeId].successDays = successDays;
 
         // if not totally success, return all the money in this pledgeId to the sponsors and return some amount to the owner address and take some amount to the deployer
         } else {
@@ -117,6 +113,9 @@ contract HabitContract {
             uint donateCharityAmount = pledgeList[pledgeId].betAmount - returnAmount;
             (bool success2, ) = (deployerAddress).call{value: donateCharityAmount}("");
             require(success2, "Transfer to deployer failed");
+
+            // update success days
+            pledgeList[pledgeId].successDays = successDays;
 
             // emit event
             emit PledgeRedeemed(pledgeId, returnAmount);

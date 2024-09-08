@@ -1,625 +1,129 @@
-// export const habitContractAddress = "0x022db003aB106baf41AE61F0C32c12c3B116C269";
-// export const habitContractABI = [
-//     {
-//         "inputs": [],
-//         "stateMutability": "nonpayable",
-//         "type": "constructor"
-//     },
-//     {
-//         "anonymous": false,
-//         "inputs": [
-//             {
-//                 "indexed": true,
-//                 "internalType": "uint256",
-//                 "name": "id",
-//                 "type": "uint256"
-//             }
-//         ],
-//         "name": "PledgeCreated",
-//         "type": "event"
-//     },
-//     {
-//         "anonymous": false,
-//         "inputs": [
-//             {
-//                 "indexed": true,
-//                 "internalType": "uint256",
-//                 "name": "id",
-//                 "type": "uint256"
-//             },
-//             {
-//                 "indexed": false,
-//                 "internalType": "uint256",
-//                 "name": "returnAmount",
-//                 "type": "uint256"
-//             }
-//         ],
-//         "name": "PledgeRedeemed",
-//         "type": "event"
-//     },
-//     {
-//         "anonymous": false,
-//         "inputs": [
-//             {
-//                 "indexed": true,
-//                 "internalType": "uint256",
-//                 "name": "id",
-//                 "type": "uint256"
-//             }
-//         ],
-//         "name": "SponsorCreated",
-//         "type": "event"
-//     },
-//     {
-//         "inputs": [
-//             {
-//                 "internalType": "uint16",
-//                 "name": "totalDays",
-//                 "type": "uint16"
-//             }
-//         ],
-//         "name": "createNewPledge",
-//         "outputs": [],
-//         "stateMutability": "payable",
-//         "type": "function"
-//     },
-//     {
-//         "inputs": [],
-//         "name": "deployerAddress",
-//         "outputs": [
-//             {
-//                 "internalType": "address",
-//                 "name": "",
-//                 "type": "address"
-//             }
-//         ],
-//         "stateMutability": "view",
-//         "type": "function"
-//     },
-//     {
-//         "inputs": [
-//             {
-//                 "internalType": "uint256",
-//                 "name": "",
-//                 "type": "uint256"
-//             }
-//         ],
-//         "name": "pledgeAmount",
-//         "outputs": [
-//             {
-//                 "internalType": "uint256",
-//                 "name": "",
-//                 "type": "uint256"
-//             }
-//         ],
-//         "stateMutability": "view",
-//         "type": "function"
-//     },
-//     {
-//         "inputs": [
-//             {
-//                 "internalType": "uint256",
-//                 "name": "",
-//                 "type": "uint256"
-//             }
-//         ],
-//         "name": "pledgeList",
-//         "outputs": [
-//             {
-//                 "internalType": "address",
-//                 "name": "ownerAddress",
-//                 "type": "address"
-//             },
-//             {
-//                 "internalType": "uint256",
-//                 "name": "endDate",
-//                 "type": "uint256"
-//             },
-//             {
-//                 "internalType": "uint256",
-//                 "name": "betAmount",
-//                 "type": "uint256"
-//             },
-//             {
-//                 "internalType": "uint256",
-//                 "name": "sponsorAmount",
-//                 "type": "uint256"
-//             },
-//             {
-//                 "internalType": "uint16",
-//                 "name": "totalDays",
-//                 "type": "uint16"
-//             },
-//             {
-//                 "internalType": "uint16",
-//                 "name": "successDays",
-//                 "type": "uint16"
-//             },
-//             {
-//                 "internalType": "bool",
-//                 "name": "isRedeemed",
-//                 "type": "bool"
-//             }
-//         ],
-//         "stateMutability": "view",
-//         "type": "function"
-//     },
-//     {
-//         "inputs": [
-//             {
-//                 "internalType": "uint256",
-//                 "name": "pledgeId",
-//                 "type": "uint256"
-//             },
-//             {
-//                 "internalType": "uint16",
-//                 "name": "successDays",
-//                 "type": "uint16"
-//             }
-//         ],
-//         "name": "redeemPledge",
-//         "outputs": [],
-//         "stateMutability": "nonpayable",
-//         "type": "function"
-//     },
-//     {
-//         "inputs": [
-//             {
-//                 "internalType": "uint256",
-//                 "name": "",
-//                 "type": "uint256"
-//             }
-//         ],
-//         "name": "sponsorList",
-//         "outputs": [
-//             {
-//                 "internalType": "address",
-//                 "name": "sponsorAddress",
-//                 "type": "address"
-//             },
-//             {
-//                 "internalType": "uint256",
-//                 "name": "sponsorAmount",
-//                 "type": "uint256"
-//             },
-//             {
-//                 "internalType": "uint256",
-//                 "name": "pledgeId",
-//                 "type": "uint256"
-//             }
-//         ],
-//         "stateMutability": "view",
-//         "type": "function"
-//     },
-//     {
-//         "inputs": [
-//             {
-//                 "internalType": "uint256",
-//                 "name": "pledgeId",
-//                 "type": "uint256"
-//             }
-//         ],
-//         "name": "sponsorPledge",
-//         "outputs": [],
-//         "stateMutability": "payable",
-//         "type": "function"
-//     }
-// ];
-
 export const habitContractAddress =
-  "0x4c8C8913369af8D4736563c3E20bb12a6ec1d904";
-export const habitContractABI = [
-  {
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-    ],
-    name: "PledgeCreated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "returnAmount",
-        type: "uint256",
-      },
-    ],
-    name: "PledgeRedeemed",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-    ],
-    name: "SponsorCreated",
-    type: "event",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint16",
-        name: "totalDays",
-        type: "uint16",
-      },
-    ],
-    name: "createNewPledge",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "deployerAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "pledgeAmount",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "pledgeList",
-    outputs: [
-      {
-        internalType: "address",
-        name: "ownerAddress",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "endDate",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "betAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "sponsorAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint16",
-        name: "totalDays",
-        type: "uint16",
-      },
-      {
-        internalType: "uint16",
-        name: "successDays",
-        type: "uint16",
-      },
-      {
-        internalType: "bool",
-        name: "isRedeemed",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "pledgeId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint16",
-        name: "successDays",
-        type: "uint16",
-      },
-    ],
-    name: "redeemPledge",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "sponsorList",
-    outputs: [
-      {
-        internalType: "address",
-        name: "sponsorAddress",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "sponsorAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "pledgeId",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "pledgeId",
-        type: "uint256",
-      },
-    ],
-    name: "sponsorPledge",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-];
+"0xCbdE51Ba4307742DF70afF96186801cA61f73b20"
 
-export const habitContractAddress2 =
-  "0x78cAe029530f906e0C0D60A2c39914cAdA331445";
-export const habitContractABI2 = [
+export const habitContractABI = [
+  { "type": "constructor", "inputs": [], "stateMutability": "nonpayable" },
   {
-    inputs: [],
-    stateMutability: "nonpayable",
-    type: "constructor",
+    "type": "function",
+    "name": "createNewPledge",
+    "inputs": [
+      { "name": "totalDays", "type": "uint16", "internalType": "uint16" },
+      { "name": "pledgeId", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-    ],
-    name: "PledgeCreated",
-    type: "event",
+    "type": "function",
+    "name": "deployerAddress",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
   },
   {
-    anonymous: false,
-    inputs: [
+    "type": "function",
+    "name": "pledgeList",
+    "inputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
       {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
+        "name": "ownerAddress",
+        "type": "address",
+        "internalType": "address"
       },
+      { "name": "endDate", "type": "uint256", "internalType": "uint256" },
+      { "name": "betAmount", "type": "uint256", "internalType": "uint256" },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "returnAmount",
-        type: "uint256",
+        "name": "sponsorAmount",
+        "type": "uint256",
+        "internalType": "uint256"
       },
+      { "name": "totalDays", "type": "uint16", "internalType": "uint16" },
+      { "name": "successDays", "type": "uint16", "internalType": "uint16" },
+      { "name": "isRedeemed", "type": "bool", "internalType": "bool" }
     ],
-    name: "PledgeRedeemed",
-    type: "event",
+    "stateMutability": "view"
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
+    "type": "function",
+    "name": "redeemPledge",
+    "inputs": [
+      { "name": "pledgeId", "type": "uint256", "internalType": "uint256" },
+      { "name": "successDays", "type": "uint16", "internalType": "uint16" }
     ],
-    name: "SponsorCreated",
-    type: "event",
+    "outputs": [],
+    "stateMutability": "nonpayable"
   },
   {
-    inputs: [
+    "type": "function",
+    "name": "sponsorList",
+    "inputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
       {
-        internalType: "uint16",
-        name: "totalDays",
-        type: "uint16",
+        "name": "sponsorAddress",
+        "type": "address",
+        "internalType": "address"
       },
+      {
+        "name": "sponsorAmount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      { "name": "pledgeId", "type": "uint256", "internalType": "uint256" }
     ],
-    name: "createNewPledge",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
+    "stateMutability": "view"
   },
   {
-    inputs: [],
-    name: "deployerAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+    "type": "function",
+    "name": "sponsorPledge",
+    "inputs": [
+      { "name": "pledgeId", "type": "uint256", "internalType": "uint256" }
     ],
-    stateMutability: "view",
-    type: "function",
+    "outputs": [],
+    "stateMutability": "payable"
   },
   {
-    inputs: [
+    "type": "event",
+    "name": "PledgeCreated",
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "name": "id",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      }
     ],
-    name: "pledgeAmount",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
+    "anonymous": false
   },
   {
-    inputs: [
+    "type": "event",
+    "name": "PledgeRedeemed",
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
+        "name": "id",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
       },
+      {
+        "name": "returnAmount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
     ],
-    name: "pledgeList",
-    outputs: [
-      {
-        internalType: "address",
-        name: "ownerAddress",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "endDate",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "betAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "sponsorAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint16",
-        name: "totalDays",
-        type: "uint16",
-      },
-      {
-        internalType: "uint16",
-        name: "successDays",
-        type: "uint16",
-      },
-      {
-        internalType: "bool",
-        name: "isRedeemed",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
+    "anonymous": false
   },
   {
-    inputs: [
+    "type": "event",
+    "name": "SponsorCreated",
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "pledgeId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint16",
-        name: "successDays",
-        type: "uint16",
-      },
+        "name": "id",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      }
     ],
-    name: "redeemPledge",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "sponsorList",
-    outputs: [
-      {
-        internalType: "address",
-        name: "sponsorAddress",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "sponsorAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "pledgeId",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "pledgeId",
-        type: "uint256",
-      },
-    ],
-    name: "sponsorPledge",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-];
+    "anonymous": false
+  }
+]

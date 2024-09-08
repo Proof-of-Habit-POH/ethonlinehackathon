@@ -32,11 +32,28 @@ export async function PATCH(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const habitId = searchParams.get("habitId");
+    const returnAmountUSD = searchParams.get("returnAmountUSD");
+    // Convert returnAmountUSD to a number
+    const returnAmountUSDNumber = returnAmountUSD ? parseFloat(returnAmountUSD) : 0;
+
+    if (!habitId) {
+      return NextResponse.json(
+        { error: "habitId is required" },
+        { status: 400 }
+      );
+    }
+
+    if (isNaN(returnAmountUSDNumber)) {
+      return NextResponse.json(
+        { error: "Invalid returnAmountUSD value" },
+        { status: 400 }
+      );
+    }
 
     if (habitId) {
       const result = await prisma.habit.update({
         where: { id: +habitId },
-        data: { status: "ENDED" },
+        data: { status: "ENDED", moneyTransferStatus: "COMPLETED", totalMoney: returnAmountUSDNumber },
       });
     }
     return NextResponse.json(

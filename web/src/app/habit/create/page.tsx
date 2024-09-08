@@ -74,30 +74,8 @@ export default function CreateNewHabit() {
     );
 
     try {
+      let habitIdInDatabase = 0;
       console.log("creating new pledge...");
-      const ethersProvider = new BrowserProvider(walletProvider);
-      const signer = await ethersProvider.getSigner();
-
-      // The Contract object
-      const HabitContract = new Contract(
-        habitContractAddress,
-        habitContractABI,
-        signer
-      );
-      const HabitContractCreateNewPledge = await HabitContract.createNewPledge(
-        durationOfHabit,
-        { value: ethers.parseEther(totalAmount.toString()) }
-      );
-
-      console.log("Created success!");
-      setLoading(true);
-
-      const receiptTx = await HabitContractCreateNewPledge.wait();
-      console.log("ReceiptTx:", receiptTx);
-      const pledgeId = receiptTx.logs[0].args.id;
-      const pledgeIdNumber = parseInt(pledgeId, 16);
-      setNewPledgeId(pledgeIdNumber);
-      console.log("PledgeId:", pledgeIdNumber);
 
       //create new habitId in database
       const res = await fetch(`/api/db/habit`, {
@@ -117,10 +95,37 @@ export default function CreateNewHabit() {
         // get habitId from response
         const createdHabit = await res.json();
         console.log("Habit created: ", createdHabit);
+        habitIdInDatabase = createdHabit.data.id;
         setCreatedHabitId(createdHabit.data.id);
       } else {
         console.error("Error creating habit:", res.status);
       }
+
+      console.log("creating new pledge on smart contract...");
+      const ethersProvider = new BrowserProvider(walletProvider);
+      const signer = await ethersProvider.getSigner();
+
+      // The Contract object
+      const HabitContract = new Contract(
+        habitContractAddress,
+        habitContractABI,
+        signer
+      );
+      console.log("habitIdInDatabase: ", habitIdInDatabase);
+      const HabitContractCreateNewPledge = await HabitContract.createNewPledge(
+        durationOfHabit,
+        habitIdInDatabase,
+        { value: ethers.parseEther(totalAmount.toString()) }
+      );
+      setLoading(true);
+
+      const receiptTx = await HabitContractCreateNewPledge.wait();
+      // console.log("ReceiptTx:", receiptTx);
+      // const pledgeId = receiptTx.logs[0].args.id;
+      // const pledgeIdNumber = parseInt(pledgeId, 16);
+      setNewPledgeId(createdHabitId);
+      // console.log("PledgeId:", pledgeIdNumber);
+      console.log("Created success!");
       setLoading(false);
       setPage(page + 1);
     } catch (error) {

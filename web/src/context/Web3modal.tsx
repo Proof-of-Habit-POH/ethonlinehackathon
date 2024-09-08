@@ -47,18 +47,13 @@ const testnet = {
   currency: "ETH",
   explorerUrl: "https://explorer-holesky.morphl2.io",
   rpcUrl: "https://rpc-quicknode-holesky.morphl2.io",
-  // chainId: 421614,
-  // name: 'Arbitrum Sepolia',
-  // currency: 'ETH',
-  // explorerUrl: 'https://sepolia.arbiscan.io',
-  // rpcUrl: 'https://sepolia-rollup.arbitrum.io/rpc'
 };
 
 // 3. Create a metadata object
 const metadata = {
   name: "proof of habit",
   description: "AppKit Example",
-  url: "localhost:3000", // origin must match your domain & subdomain
+  url: "https://proofofhabit.up.railway.app/", // origin must match your domain & subdomain
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
